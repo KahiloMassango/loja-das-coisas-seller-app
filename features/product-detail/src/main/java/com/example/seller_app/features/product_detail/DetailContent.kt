@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -35,6 +36,7 @@ import com.example.seller_app.core.ui.component.CenteredTopBar
 import com.example.seller_app.core.ui.component.CustomButton
 import com.example.seller_app.core.ui.component.ImagePicker
 import com.example.seller_app.core.ui.component.StoreTextField
+import com.example.seller_app.core.ui.toastMessage
 
 
 @Composable
@@ -44,6 +46,7 @@ internal fun DetailContent(
     onVariationsClick: () -> Unit,
     onNavigateUp: () -> Unit
 ) {
+    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var isEditing by remember { mutableStateOf(false) }
@@ -151,7 +154,11 @@ internal fun DetailContent(
                     CustomButton(
                         text = "Salvar",
                         onClick = {
-                            isEditing = false
+                            if (uiState.productName.isNotEmpty() && uiState.description.isNotEmpty()) {
+                                isEditing = false
+                            } else {
+                                context.toastMessage("Preencha todos os campos")
+                            }
                         }
                     )
                 }

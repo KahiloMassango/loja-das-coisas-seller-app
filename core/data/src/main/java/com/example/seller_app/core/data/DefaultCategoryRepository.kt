@@ -11,8 +11,8 @@ class DefaultCategoryRepository(
     private val categoryDao: CategoryDao
 ): CategoryRepository {
 
-    override fun getCategoriesStream(): Flow<List<String>> {
-        return categoryDao.getAllCategories().map { list -> list.map { it.name }  }
+    override fun getCategories(): List<String> {
+        return categoryDao.getAllCategories().map { it.name }
     }
 
     override fun addCategory(category: Category) {

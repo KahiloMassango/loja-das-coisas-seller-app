@@ -30,7 +30,7 @@ import com.example.seller_app.core.ui.R
 import com.example.seller_app.features.add_product.VariationItem
 
 @Composable
-internal fun VariationItemCard(
+internal fun VariationCard(
     modifier: Modifier = Modifier,
     productName: String,
     variation: VariationItem,

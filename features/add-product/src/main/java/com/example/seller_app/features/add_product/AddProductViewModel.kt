@@ -33,21 +33,17 @@ class AddProductViewModel @Inject constructor(
     private val _colorOptions = MutableStateFlow<List<String>>(emptyList())
     val colorOptions = _colorOptions.asStateFlow()
 
-    private val _sizeOptions = MutableStateFlow<List<String>>(emptyList())
-    val sizeOptions = _sizeOptions.asStateFlow()
+    var categories = MutableStateFlow<List<String>>(emptyList())
+        private set
+
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
+            categories.value = categoryRepository.getCategories()
             _colorOptions.value = colorRepository.getAllColors()
         }
     }
 
-    val categories = categoryRepository.getCategoriesStream()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = emptyList()
-        )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val subCategories = uiState.mapLatest { state ->
@@ -70,7 +66,7 @@ class AddProductViewModel @Inject constructor(
     )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val test = uiState.mapLatest { state ->
+    val sizeOptions = uiState.mapLatest { state ->
         if (state.subCategory != null) {
             sizeRepository.getSizesBySubcategoryId(state.subCategory)
         } else {
@@ -97,13 +93,14 @@ class AddProductViewModel @Inject constructor(
 
     fun updateCategory(category: String) {
         _uiState.update { it.copy(category = category) }
+        // Clear variation list
+        _uiState.update { it.copy(variations = emptyList()) }
     }
 
     fun updateSubCategory(subCategory: String) {
         _uiState.update { it.copy(subCategory = subCategory) }
-        viewModelScope.launch(Dispatchers.IO) {
-            _sizeOptions.value = sizeRepository.getSizesBySubcategoryId(subCategory)
-        }
+        // Clear variation list
+        _uiState.update { it.copy(variations = emptyList()) }
     }
 
     fun addVariation(variation: VariationItem) {

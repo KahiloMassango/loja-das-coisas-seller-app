@@ -29,6 +29,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -36,8 +37,8 @@ import androidx.core.text.isDigitsOnly
 import com.example.seller_app.core.ui.component.CustomButton
 import com.example.seller_app.core.ui.component.ImagePicker
 import com.example.seller_app.core.ui.component.LabeledTextField
-import com.example.seller_app.features.add_product.VariationItem
 import com.example.seller_app.core.ui.util.CurrencyVisualTransformation
+import com.example.seller_app.features.add_product.VariationItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,6 +62,7 @@ internal fun AddVariationModal(
         onDismissRequest = onDismissRequest,
         contentWindowInsets = { WindowInsets.navigationBars.union(WindowInsets.ime) }
     ) {
+        val focusManager = LocalFocusManager.current
         Column(
             modifier = Modifier
                 .systemBarsPadding()
@@ -92,21 +94,47 @@ internal fun AddVariationModal(
             CustomButton(
                 text = "Adicionar",
                 onClick = {
-                    if (
-                        (colorOptions.isNotEmpty() && variation.color.isNullOrEmpty()) ||
-                        (sizeOptions.isNotEmpty() && variation.size.isNullOrEmpty()) ||
-                        variation.price.isBlank() || variation.quantity.isBlank() ||
-                        variation.image == null
-                    ) {
+                    if (!isValidVariation(variation, subCategory)) {
                         Toast.makeText(context, "Preencha todos os campos", Toast.LENGTH_SHORT)
                             .show()
                     } else {
                         onAddVariation(variation)
                         variation = VariationItem()
+                        focusManager.clearFocus()
                     }
                 }
             )
         }
+    }
+}
+
+private fun isValidVariation(
+    variation: VariationItem,
+    subCategory: String
+): Boolean {
+    when (subCategory) {
+        "Roupas", "Calçados" -> {
+            return variation.color != null &&
+                    variation.size != null &&
+                    variation.price.isNotBlank() &&
+                    variation.quantity.isNotBlank() &&
+                    !variation.image.isNullOrBlank()
+        }
+
+        "Acessórios", "Maquiagem" -> {
+            return variation.color != null &&
+                    variation.price.isNotBlank() &&
+                    variation.quantity.isNotBlank() &&
+                    !variation.image.isNullOrBlank()
+        }
+
+        "Skincare", "Perfumes"  -> {
+            return variation.size != null &&
+                    variation.price.isNotBlank() &&
+                    variation.quantity.isNotBlank() &&
+                    !variation.image.isNullOrBlank()
+        }
+        else -> return false
     }
 }
 

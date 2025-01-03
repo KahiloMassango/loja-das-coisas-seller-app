@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.seller_app.core.ui.clearFocusOnTap
 import com.example.seller_app.core.ui.component.AppDropdownMenu
 import com.example.seller_app.core.ui.component.CenteredTopBar
 import com.example.seller_app.core.ui.component.CustomButton
@@ -33,7 +34,7 @@ import com.example.seller_app.core.ui.component.ImagePicker
 import com.example.seller_app.core.ui.component.StoreTextField
 
 @Composable
-internal fun ProductInformationContent(
+internal fun ProductDetailContent(
     modifier: Modifier = Modifier,
     uiState: ProductUiState,
     onProductNameChange: (String) -> Unit,
@@ -43,7 +44,7 @@ internal fun ProductInformationContent(
     subCategories: List<String>,
     onCategoryChange: (String) -> Unit,
     onSubCategoryChange: (String) -> Unit,
-    onNext: () -> Unit,
+    onVariationsClick: () -> Unit,
     onSaveProduct: () -> Unit,
     onNavigateUp: () -> Unit
 ) {
@@ -67,11 +68,7 @@ internal fun ProductInformationContent(
                 .padding(paddingValues)
                 .padding(16.dp)
                 .fillMaxSize()
-                .pointerInput(Unit) {
-                    detectTapGestures {
-                        focusManager.clearFocus()
-                    }
-                }
+                .clearFocusOnTap(focusManager)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -80,17 +77,13 @@ internal fun ProductInformationContent(
                 onImageSelected = { onImageChange(it) }
             )
             Spacer(Modifier.height(30.dp))
-
             StoreTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = uiState.productName,
                 onValueChange = { onProductNameChange(it) },
                 label = "Nome do Produto",
                 placeholder = "Ex.: T-Shirt Mangas Curtas",
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Text,
-                ),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 keyboardActions = KeyboardActions(
                     onNext = { focusManager.moveFocus(FocusDirection.Next) }
                 )
@@ -103,9 +96,6 @@ internal fun ProductInformationContent(
                 onValueChange = { onDescriptionChange(it) },
                 label = "Descrição",
                 singleLine = false,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Ascii,
-                )
             )
             Spacer(Modifier.height(20.dp))
             Row(
@@ -147,20 +137,14 @@ internal fun ProductInformationContent(
                 CustomButton(
                     text = "Variações",
                     onClick = {
-                        if(uiState.category == null){
+                        if(uiState.productName.isBlank() && uiState.category == null ){
                             Toast.makeText(
                                 context,
-                                "Por favor, selecione uma categoria",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else if (uiState.subCategory == null){
-                            Toast.makeText(
-                                context,
-                                "Por favor, selecione uma sub-categoria",
+                                "Por favor, preencha todos os campos",
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {
-                            onNext()
+                            onVariationsClick()
                         }
                     }
                 )

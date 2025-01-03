@@ -23,7 +23,7 @@ internal fun VariationsList(
     ) {
         variations.forEachIndexed { index, variation ->
             item {
-                VariationItemCard(
+                VariationCard(
                     productName = productName,
                     variation = variation,
                     onRemove = { onRemove(index) } // Future implementation

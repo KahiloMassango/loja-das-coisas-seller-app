@@ -21,7 +21,7 @@ fun AddProductScreen(
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     val subCategories by viewModel.subCategories.collectAsStateWithLifecycle()
     val colorOptions by viewModel.colorOptions.collectAsStateWithLifecycle()
-    val sizeOptions by viewModel.test.collectAsStateWithLifecycle()
+    val sizeOptions by viewModel.sizeOptions.collectAsStateWithLifecycle()
 
     AnimatedContent(
         targetState = screen,
@@ -29,10 +29,10 @@ fun AddProductScreen(
     ) {
         when(it) {
             1 -> {
-                ProductInformationContent(
+                ProductDetailContent(
                     uiState = uiState,
                     onNavigateUp = onNavigateUp,
-                    onNext = { screen = 2 },
+                    onVariationsClick = { screen = 2 },
                     onCategoryChange = viewModel::updateCategory,
                     onSubCategoryChange = viewModel::updateSubCategory,
                     onProductNameChange = viewModel::updateProductName,

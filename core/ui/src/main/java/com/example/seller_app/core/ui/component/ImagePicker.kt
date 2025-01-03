@@ -40,7 +40,9 @@ fun ImagePicker(
     val requester = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-            onImageSelected(uri.toString())
+            if (uri != null) {
+                onImageSelected(uri.toString())
+            }
         }
     )
     val borderColor = MaterialTheme.colorScheme.primary
@@ -63,7 +65,7 @@ fun ImagePicker(
                 )
             }
             .then(
-                if(enabled) Modifier.clickable {
+                if (enabled) Modifier.clickable {
                     requester.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )

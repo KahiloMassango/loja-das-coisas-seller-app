@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.seller_app.core.ui.component.AppDropdownMenu
+import com.example.seller_app.core.ui.component.AppOptionSelector
 
 @Composable
 internal fun  ProductVariationSelector(
@@ -14,10 +14,8 @@ internal fun  ProductVariationSelector(
     subCategory: String,
     selectedColor: String?,
     selectedSize: String?,
-    colorOptions: List<String>,
-    sizeOptions: List<String>,
-    onColorSelected: (String) -> Unit,
-    onSizeSelected: (String) -> Unit,
+    onChangeColor: () -> Unit,
+    onChangeSize: () -> Unit,
 ) {
     Row(
         modifier = modifier,
@@ -26,43 +24,39 @@ internal fun  ProductVariationSelector(
         when (subCategory) {
             "Calçados", "Roupas" -> {
                 // Show both Color and Size dropdowns
-                AppDropdownMenu(
+                AppOptionSelector(
                     modifier = Modifier.weight(0.5f),
                     label = "Cor",
                     placeholder = "Selecione uma cor",
                     selectedOption = selectedColor,
-                    options = colorOptions,
-                    onSelect = onColorSelected,
+                    onClick = onChangeColor,
                 )
-                AppDropdownMenu(
+                AppOptionSelector(
                     modifier = Modifier.weight(0.5f),
                     label = "Tamanho",
                     placeholder = "Selecione um tamanho",
                     selectedOption = selectedSize,
-                    options = sizeOptions,
-                    onSelect = onSizeSelected,
+                    onClick  = onChangeSize,
                 )
             }
             "Acessórios", "Maquiagem" -> {
                 // Show only Color dropdown
-                AppDropdownMenu(
+                AppOptionSelector(
                     modifier = Modifier.fillMaxWidth(0.5f),
                     label = "Cor",
                     placeholder = "Selecione uma cor",
                     selectedOption = selectedColor,
-                    options = colorOptions,
-                    onSelect = onColorSelected,
+                    onClick = onChangeColor,
                 )
             }
             "Skincare", "Perfumes" -> {
                 // Show only Size dropdown
-                AppDropdownMenu(
+                AppOptionSelector(
                     modifier = Modifier.fillMaxWidth(0.5f),
                     label = "Tamanho",
                     placeholder = "Selecione um tamanho",
                     selectedOption = selectedSize,
-                    options = sizeOptions,
-                    onSelect = onSizeSelected,
+                    onClick  = onChangeSize,
                 )
             }
         }

@@ -28,6 +28,7 @@ internal fun VariationsContent(
     onNavigateUp: () -> Unit,
 ) {
     var showAddVariationModal by remember { mutableStateOf(false) }
+
     BackHandler {
         onNavigateUp()
     }
@@ -65,9 +66,10 @@ internal fun VariationsContent(
                 colorOptions = colorOptions,
                 sizeOptions = sizeOptions,
                 onDismissRequest = { showAddVariationModal = false },
-                onAddVariation = { addVariation(it) }
+                onAddVariation = { addVariation(it) },
             )
         }
+
     }
 }
 

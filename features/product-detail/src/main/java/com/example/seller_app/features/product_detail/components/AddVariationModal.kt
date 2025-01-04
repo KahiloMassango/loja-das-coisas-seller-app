@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.example.seller_app.core.ui.component.CustomButton
 import com.example.seller_app.core.ui.component.ImagePicker
 import com.example.seller_app.core.ui.component.ProductVariationSelector
+import com.example.seller_app.core.ui.component.VariationOptionSelector
 import com.example.seller_app.features.product_detail.model.VariationState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +48,9 @@ internal fun AddVariationModal(
     var size: String? by rememberSaveable { mutableStateOf(null) }
     var price by rememberSaveable { mutableStateOf("1000") }
     var quantity by rememberSaveable { mutableStateOf("1") }
+
+    var showColorSelector by remember { mutableStateOf(false) }
+    var showSizeSelector by remember { mutableStateOf(false) }
 
     val isFormValid by remember {
         derivedStateOf {
@@ -83,10 +87,8 @@ internal fun AddVariationModal(
                 subCategory = subCategory,
                 selectedColor = color,
                 selectedSize = size,
-                colorOptions = colorOptions,
-                sizeOptions = sizeOptions,
-                onColorSelected = { color = it },
-                onSizeSelected = { size = it }
+                onChangeColor = { showColorSelector = true },
+                onChangeSize = { showSizeSelector = true }
             )
             VariationPriceAndQuantity(
                 price = price,
@@ -117,6 +119,20 @@ internal fun AddVariationModal(
                 }
             )
         }
+    }
+    if (showColorSelector) {
+        VariationOptionSelector(
+            options = colorOptions,
+            onSelect = { color = it },
+            onDismissRequest = { showColorSelector = false  }
+        )
+    }
+    if (showSizeSelector) {
+        VariationOptionSelector(
+            options = sizeOptions,
+            onSelect = { size = it },
+            onDismissRequest = { showSizeSelector = false  }
+        )
     }
 }
 

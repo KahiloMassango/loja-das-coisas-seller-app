@@ -29,7 +29,6 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -37,6 +36,7 @@ import androidx.core.text.isDigitsOnly
 import com.example.seller_app.core.ui.component.CustomButton
 import com.example.seller_app.core.ui.component.ImagePicker
 import com.example.seller_app.core.ui.component.LabeledTextField
+import com.example.seller_app.core.ui.component.VariationOptionSelector
 import com.example.seller_app.core.ui.util.CurrencyVisualTransformation
 import com.example.seller_app.features.add_product.VariationItem
 
@@ -51,6 +51,8 @@ internal fun AddVariationModal(
     onAddVariation: (VariationItem) -> Unit
 ) {
     var variation by remember { mutableStateOf(VariationItem()) }
+    var showColorSelector by remember { mutableStateOf(false) }
+    var showSizeSelector by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     ModalBottomSheet(
@@ -80,11 +82,10 @@ internal fun AddVariationModal(
                 subCategory = subCategory,
                 selectedColor = variation.color,
                 selectedSize = variation.size,
-                colorOptions = colorOptions,
-                sizeOptions = sizeOptions,
-                onColorSelected = { variation = variation.copy(color = it) },
-                onSizeSelected = { variation = variation.copy(size = it) }
+                onChangeColor = { showColorSelector = true },
+                onChangeSize = { showSizeSelector = true }
             )
+
             VariationPriceAndQuantity(
                 price = variation.price,
                 quantity = variation.quantity,
@@ -106,7 +107,22 @@ internal fun AddVariationModal(
             )
         }
     }
+    if (showColorSelector) {
+        VariationOptionSelector(
+            options = colorOptions,
+            onSelect = { variation = variation.copy(color = it) },
+            onDismissRequest = { showColorSelector = false  }
+        )
+    }
+    if (showSizeSelector) {
+        VariationOptionSelector(
+            options = sizeOptions,
+            onSelect = { variation = variation.copy(size = it) },
+            onDismissRequest = { showSizeSelector = false  }
+        )
+    }
 }
+
 
 private fun isValidVariation(
     variation: VariationItem,

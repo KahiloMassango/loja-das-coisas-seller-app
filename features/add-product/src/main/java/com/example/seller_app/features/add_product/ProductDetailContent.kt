@@ -1,7 +1,6 @@
 package com.example.seller_app.features.add_product
 
 import android.widget.Toast
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,11 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.seller_app.core.ui.clearFocusOnTap
 import com.example.seller_app.core.ui.component.AppDropdownMenu
@@ -137,7 +134,7 @@ internal fun ProductDetailContent(
                 CustomButton(
                     text = "Variações",
                     onClick = {
-                        if(uiState.productName.isBlank() && uiState.category == null ){
+                        if(uiState.productName.isBlank() || uiState.category == null ){
                             Toast.makeText(
                                 context,
                                 "Por favor, preencha todos os campos",

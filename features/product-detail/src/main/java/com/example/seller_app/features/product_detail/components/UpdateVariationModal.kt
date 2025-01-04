@@ -81,10 +81,8 @@ internal fun UpdateVariationModal(
                 enabled = false,
                 selectedColor = variationItem.color,
                 selectedSize = variationItem.size,
-                colorOptions = emptyList(),
-                sizeOptions = emptyList(),
-                onColorSelected = {},
-                onSizeSelected = {}
+                onChangeColor = {},
+                onChangeSize = {}
             )
             VariationPriceAndQuantity(
                 price = price,

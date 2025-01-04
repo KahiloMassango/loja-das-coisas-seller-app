@@ -95,3 +95,51 @@ fun AppDropdownMenu(
         }
     }
 }
+
+@Composable
+fun AppOptionSelector(
+    modifier: Modifier = Modifier,
+    label: String,
+    placeholder: String,
+    selectedOption: String?,
+    enabled: Boolean = true,
+    onClick: () -> Unit,
+) {
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium
+        )
+        OutlinedCard(
+            modifier = Modifier,
+            enabled = enabled,
+            onClick = onClick,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(0.8f)),
+            colors = CardDefaults.outlinedCardColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            )
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = selectedOption ?: placeholder,
+                    style = MaterialTheme.typography.labelMedium
+                )
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = null
+                )
+            }
+        }
+    }
+}

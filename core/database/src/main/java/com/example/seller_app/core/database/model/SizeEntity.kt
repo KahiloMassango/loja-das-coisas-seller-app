@@ -9,11 +9,11 @@ data class SizeEntity(
     @PrimaryKey
     val id: String,
     val value: String,
-    val subcategoryId: String
+    val category: String
 )
 
 fun SizeEntity.asExternalModel() = ProductSize(
     value = value,
     id = id,
-    subcategoryId = subcategoryId
+    category = category
 )

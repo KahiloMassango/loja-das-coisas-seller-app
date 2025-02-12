@@ -52,7 +52,7 @@ internal fun ProductsHeader(
             ) {
                 AppDropdownMenu(
                     modifier = Modifier.weight(1f),
-                    label = "Categoria",
+                    label = "Gênero",
                     placeholder = "Selecione uma categoria",
                     selectedOption = selectedCategory,
                     options = categories,
@@ -60,8 +60,8 @@ internal fun ProductsHeader(
                 )
                 AppDropdownMenu(
                     modifier = Modifier.weight(1f),
-                    label = "Sub-categoria",
-                    placeholder = "Selecione uma sub-categoria",
+                    label = "Categoria",
+                    placeholder = "Selecione uma categoria",
                     selectedOption = selectedSubCategory,
                     options = subCategories,
                     onSelect = { onSelectSubCategory(it) }

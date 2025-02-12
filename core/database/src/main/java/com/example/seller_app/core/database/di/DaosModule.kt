@@ -1,10 +1,10 @@
 package com.example.seller_app.core.database.di
 
 import com.example.seller_app.core.database.AppDatabase
-import com.example.seller_app.core.database.dao.CategoryDao
+import com.example.seller_app.core.database.dao.GenderDao
 import com.example.seller_app.core.database.dao.ColorDao
 import com.example.seller_app.core.database.dao.SizeDao
-import com.example.seller_app.core.database.dao.SubcategoryDao
+import com.example.seller_app.core.database.dao.CategoryDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,15 +15,15 @@ import dagger.hilt.components.SingletonComponent
 object DaosModule {
 
     @Provides
-    fun providesCategoryDao(
-        database: AppDatabase): CategoryDao {
-        return database.categoryDao()
+    fun providesGenderDao(
+        database: AppDatabase): GenderDao {
+        return database.genderDao()
     }
 
     @Provides
-    fun providesSubcategoryDao(
-        database: AppDatabase): SubcategoryDao {
-        return database.subcategoryDao()
+    fun providesCategoryDao(
+        database: AppDatabase): CategoryDao {
+        return database.categoryDao()
     }
 
     @Provides

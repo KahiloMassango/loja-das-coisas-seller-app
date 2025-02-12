@@ -38,6 +38,7 @@ dependencies {
 
     implementation(projects.features.home)
     implementation(projects.features.products)
+    implementation(projects.features.finances)
     implementation(projects.features.addProduct)
     implementation(projects.features.productDetail)
 

@@ -18,8 +18,8 @@ fun AddProductScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var screen by remember { mutableIntStateOf(1) }
+    val genders by viewModel.genders.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()
-    val subCategories by viewModel.subCategories.collectAsStateWithLifecycle()
     val colorOptions by viewModel.colorOptions.collectAsStateWithLifecycle()
     val sizeOptions by viewModel.sizeOptions.collectAsStateWithLifecycle()
 
@@ -33,13 +33,13 @@ fun AddProductScreen(
                     uiState = uiState,
                     onNavigateUp = onNavigateUp,
                     onVariationsClick = { screen = 2 },
-                    onCategoryChange = viewModel::updateCategory,
-                    onSubCategoryChange = viewModel::updateSubCategory,
+                    onGenderChange = viewModel::updateCategory,
+                    onCategoryChange = viewModel::updateSubCategory,
                     onProductNameChange = viewModel::updateProductName,
                     onDescriptionChange = viewModel::updateDescription,
                     onImageChange = viewModel::updateImage,
+                    genders = genders,
                     categories = categories,
-                    subCategories = subCategories,
                     onSaveProduct = {}
                 )
             }

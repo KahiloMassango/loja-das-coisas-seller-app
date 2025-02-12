@@ -82,7 +82,7 @@ private fun HomeScreenContent(modifier: Modifier) {
                 modifier = Modifier
                     .fillMaxWidth(),
                 contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(22.dp)
+                verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
                 items(5) {
                     OrderCard()

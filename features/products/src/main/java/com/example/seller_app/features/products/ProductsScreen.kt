@@ -42,33 +42,33 @@ fun ProductsScreen(
     onAddNewProduct: () -> Unit,
     onProductClick: (String) -> Unit
 ) {
+    val genders by viewModel.genders.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()
-    val subcategories by viewModel.subcategories.collectAsStateWithLifecycle()
-    val selectedCategory by viewModel.currentCategory.collectAsState()
-    val selectedSubCategory by viewModel.currentSubCategory.collectAsState()
+    val selectedCategory by viewModel.currentGender.collectAsState()
+    val selectedSubCategory by viewModel.currentCategory.collectAsState()
 
     ProductsContent(
         modifier = modifier,
+        genders = genders,
         categories = categories,
-        subcategories = subcategories,
         onAddNewProduct = onAddNewProduct,
         onProductClick = onProductClick,
-        selectedCategory = selectedCategory,
-        selectedSubCategory = selectedSubCategory,
-        updateCategory = viewModel::updateCategory,
-        updateSubCategory = viewModel::updateSubCategory,
+        selectedGender = selectedCategory,
+        selectedCategory = selectedSubCategory,
+        updateGender = viewModel::updateCategory,
+        updateCategory = viewModel::updateSubCategory,
     )
 }
 
 @Composable
 fun ProductsContent(
     modifier: Modifier = Modifier,
+    genders: List<String>,
     categories: List<String>,
-    subcategories: List<String>,
+    selectedGender: String,
     selectedCategory: String,
-    selectedSubCategory: String,
+    updateGender: (String) -> Unit,
     updateCategory: (String) -> Unit,
-    updateSubCategory: (String) -> Unit,
     onAddNewProduct: () -> Unit,
     onProductClick: (String) -> Unit
 ) {
@@ -111,12 +111,12 @@ fun ProductsContent(
                 .fillMaxSize()
         ) {
             ProductsHeader(
-                selectedCategory = selectedCategory,
-                selectedSubCategory = selectedSubCategory,
-                categories = categories,
-                subCategories = subcategories,
-                onSelectCategory = updateCategory,
-                onSelectSubCategory = updateSubCategory
+                selectedCategory = selectedGender,
+                selectedSubCategory = selectedCategory,
+                categories = genders,
+                subCategories = categories,
+                onSelectCategory = updateGender,
+                onSelectSubCategory = updateCategory
             )
             LazyVerticalGrid(
                 modifier = Modifier

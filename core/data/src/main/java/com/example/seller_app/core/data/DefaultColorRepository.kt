@@ -2,7 +2,7 @@ package com.example.seller_app.core.data
 
 import com.example.seller_app.core.data.model.asEntity
 import com.example.seller_app.core.database.dao.ColorDao
-import com.example.seller_app.core.model.ProductColor
+import com.example.seller_app.core.model.Color
 
 class DefaultColorRepository(
     private val colorDao: ColorDao
@@ -10,10 +10,10 @@ class DefaultColorRepository(
 ): ColorRepository {
 
     override suspend fun getAllColors(): List<String> {
-        return colorDao.getAllColors().map { it.value }
+        return colorDao.getAllColors().map { it.name }
     }
 
-    override suspend fun addColor(color: ProductColor) {
+    override suspend fun addColor(color: Color) {
         colorDao.addColor(color.asEntity())
     }
 }

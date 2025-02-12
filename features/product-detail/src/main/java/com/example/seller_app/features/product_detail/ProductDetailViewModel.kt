@@ -36,7 +36,7 @@ class ProductDetailViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { ProductDetailUiState() }
             _colorOptions.value = colorRepository.getAllColors()
-            _sizeOptions.value = sizeRepository.getSizesBySubcategoryId(_uiState.value.subCategory)
+            _sizeOptions.value = sizeRepository.getSizesByCategory(_uiState.value.category)
 
         }
     }
@@ -98,7 +98,7 @@ data class ProductDetailUiState(
     val productName: String = "Calça Jeans Rasgada",
     val description: String = "Calça confortável, de algodão",
     val image: String = "https://images.tcdn.com.br/img/img_prod/769687/calca_jeans_masculina_slim_algodao_com_elastano_40_e_44_wolfgan_1439_variacao_9653_1_6b0685f12cef1f1e7ef4dbaf36e6a64c.jpg",
-    val category: String = "Homens",
-    val subCategory: String = "Roupas",
+    val gender: String = "Homens",
+    val category: String = "Roupas",
     val variations: List<VariationItem> = listOf(VariationItem("", "Preto", "", 5.800, "XL", 6))
 )

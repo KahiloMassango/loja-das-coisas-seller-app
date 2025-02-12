@@ -2,10 +2,10 @@ package com.example.seller_app.features.add_product
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.seller_app.core.data.CategoryRepository
+import com.example.seller_app.core.data.GenderRepository
 import com.example.seller_app.core.data.ColorRepository
 import com.example.seller_app.core.data.SizeRepository
-import com.example.seller_app.core.data.SubCategoryRepository
+import com.example.seller_app.core.data.CategoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,8 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddProductViewModel @Inject constructor(
+    private val genderRepository: GenderRepository,
     private val categoryRepository: CategoryRepository,
-    private val subCategoryRepository: SubCategoryRepository,
     private val colorRepository: ColorRepository,
     private val sizeRepository: SizeRepository
 ) : ViewModel() {
@@ -33,42 +33,28 @@ class AddProductViewModel @Inject constructor(
     private val _colorOptions = MutableStateFlow<List<String>>(emptyList())
     val colorOptions = _colorOptions.asStateFlow()
 
+    var genders = MutableStateFlow<List<String>>(emptyList())
+        private set
+
     var categories = MutableStateFlow<List<String>>(emptyList())
         private set
 
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            categories.value = categoryRepository.getCategories()
+            genders.value = genderRepository.getGenders()
+            categories.value = categoryRepository.getAllCategories()
             _colorOptions.value = colorRepository.getAllColors()
         }
     }
 
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val subCategories = uiState.mapLatest { state ->
-        if (state.category != null) {
-            subCategoryRepository.getSubcategoriesByCategoryId(state.category)
-                .also { subCategories ->
-                    if (state.subCategory !in subCategories) {
-                        _uiState.update { currentState ->
-                            currentState.copy(subCategory = subCategories.firstOrNull())
-                        }
-                    }
-                }
-        } else {
-            emptyList()
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = emptyList()
-    )
+
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val sizeOptions = uiState.mapLatest { state ->
-        if (state.subCategory != null) {
-            sizeRepository.getSizesBySubcategoryId(state.subCategory)
+        if (state.category != null) {
+            sizeRepository.getSizesByCategory(state.category)
         } else {
             emptyList()
         }
@@ -92,13 +78,13 @@ class AddProductViewModel @Inject constructor(
     }
 
     fun updateCategory(category: String) {
-        _uiState.update { it.copy(category = category) }
+        _uiState.update { it.copy(gender = category) }
         // Clear variation list
         _uiState.update { it.copy(variations = emptyList()) }
     }
 
     fun updateSubCategory(subCategory: String) {
-        _uiState.update { it.copy(subCategory = subCategory) }
+        _uiState.update { it.copy(category = subCategory) }
         // Clear variation list
         _uiState.update { it.copy(variations = emptyList()) }
     }
@@ -121,8 +107,8 @@ data class ProductUiState(
     val productName: String = "",
     val description: String = "",
     val image: String = "",
+    val gender: String? = null,
     val category: String? = null,
-    val subCategory: String? = null,
     val variations: List<VariationItem> = listOf(VariationItem())
 )
 

@@ -16,7 +16,7 @@ internal fun  ProductVariationSelector(
     selectedSize: String?,
     onChangeColor: () -> Unit,
     onChangeSize: () -> Unit,
-) {
+)  {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(14.dp),

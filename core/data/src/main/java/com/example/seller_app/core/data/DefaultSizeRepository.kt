@@ -9,8 +9,8 @@ class DefaultSizeRepository(
 
 ): SizeRepository {
 
-    override suspend fun getSizesBySubcategoryId(subcategory: String): List<String> {
-        return sizeDao.getAllSizes(subcategory).map { it.value }
+    override suspend fun getSizesByCategory(category: String): List<String> {
+        return sizeDao.getAllSizes(category).map { it.value }
     }
 
     override suspend fun addSize(size: ProductSize) {

@@ -37,10 +37,10 @@ internal fun ProductDetailContent(
     onProductNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onImageChange: (String) -> Unit,
+    genders: List<String>,
     categories: List<String>,
-    subCategories: List<String>,
+    onGenderChange: (String) -> Unit,
     onCategoryChange: (String) -> Unit,
-    onSubCategoryChange: (String) -> Unit,
     onVariationsClick: () -> Unit,
     onSaveProduct: () -> Unit,
     onNavigateUp: () -> Unit
@@ -101,19 +101,19 @@ internal fun ProductDetailContent(
             ) {
                 AppDropdownMenu(
                     modifier = Modifier.weight(1f),
+                    label = "Gênero",
+                    placeholder = "Selecione um gênero",
+                    selectedOption = uiState.gender,
+                    options = genders,
+                    onSelect = { onGenderChange(it) },
+                )
+                AppDropdownMenu(
+                    modifier = Modifier.weight(1f),
                     label = "Categoria",
                     placeholder = "Selecione uma categoria",
                     selectedOption = uiState.category,
                     options = categories,
                     onSelect = { onCategoryChange(it) },
-                )
-                AppDropdownMenu(
-                    modifier = Modifier.weight(1f),
-                    label = "Sub-Categoria",
-                    placeholder = "Selecione uma categoria",
-                    selectedOption = uiState.subCategory,
-                    options = subCategories,
-                    onSelect = { onSubCategoryChange(it) },
                 )
             }
             Spacer(Modifier.height(20.dp))
@@ -126,15 +126,15 @@ internal fun ProductDetailContent(
                     text = "Salvar Produto",
                     onClick = onSaveProduct,
                     enabled = uiState.variations.isNotEmpty() &&
+                            uiState.gender != null &&
                             uiState.category != null &&
-                            uiState.subCategory != null &&
                     uiState.productName.isNotBlank() &&
                     uiState.image.isNotBlank()
                 )
                 CustomButton(
                     text = "Variações",
                     onClick = {
-                        if(uiState.productName.isBlank() || uiState.category == null ){
+                        if(uiState.productName.isBlank() || uiState.gender == null ){
                             Toast.makeText(
                                 context,
                                 "Por favor, preencha todos os campos",

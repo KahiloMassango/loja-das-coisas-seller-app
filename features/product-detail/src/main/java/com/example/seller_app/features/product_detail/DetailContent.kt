@@ -119,18 +119,18 @@ internal fun DetailContent(
                 AppDropdownMenu(
                     modifier = Modifier.weight(1f),
                     enabled = false,
-                    label = "Categoria",
+                    label = "Gênero",
                     placeholder = "",
-                    selectedOption = uiState.category,
+                    selectedOption = uiState.gender,
                     options = emptyList(),
                     onSelect = { },
                 )
                 AppDropdownMenu(
                     modifier = Modifier.weight(1f),
                     enabled = false,
-                    label = "Sub-Categoria",
+                    label = "Categoria",
                     placeholder = "",
-                    selectedOption = uiState.subCategory,
+                    selectedOption = uiState.category,
                     options = emptyList(),
                     onSelect = { },
                 )

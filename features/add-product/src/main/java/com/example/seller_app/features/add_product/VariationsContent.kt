@@ -62,7 +62,7 @@ internal fun VariationsContent(
         }
         if (showAddVariationModal) {
             AddVariationModal(
-                subCategory = uiState.subCategory ?: "",
+                subCategory = uiState.category ?: "",
                 colorOptions = colorOptions,
                 sizeOptions = sizeOptions,
                 onDismissRequest = { showAddVariationModal = false },

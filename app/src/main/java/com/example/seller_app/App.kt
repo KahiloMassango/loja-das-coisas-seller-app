@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.seller_app.features.add_product.navigation.addProductScreen
 import com.example.seller_app.features.add_product.navigation.navigateToAddProduct
+import com.example.seller_app.features.finances.navigation.financeScreen
 import com.example.seller_app.features.home.navigation.HomeRoute
 import com.example.seller_app.features.home.navigation.homeScreen
 import com.example.seller_app.features.product_detail.navigation.navigateToProductDetail
@@ -41,6 +42,7 @@ fun App(
                 onAddNewProduct = { navController.navigateToAddProduct() },
                 onProductClick = { id -> navController.navigateToProductDetail(id) }
             )
+            financeScreen()
         }
         AppNavigationBar(
             navController = navController

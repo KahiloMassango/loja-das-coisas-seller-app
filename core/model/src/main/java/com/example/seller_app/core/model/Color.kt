@@ -1,6 +1,6 @@
 package com.example.seller_app.core.model
 
-data class ProductColor(
+data class Color(
     val id: String,
-    val value: String,
+    val name: String
 )

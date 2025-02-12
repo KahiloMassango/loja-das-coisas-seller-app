@@ -1,6 +1,6 @@
 package com.example.seller_app.core.model
 
 data class Category(
-    val id: String,
+    val id: Int,
     val name: String,
 )

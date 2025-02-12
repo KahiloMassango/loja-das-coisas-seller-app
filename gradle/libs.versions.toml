@@ -1,6 +1,6 @@
 [versions]
 # Core
-agp = "8.7.0"
+agp = "8.8.0"
 androidGradlePlugin = "8.1.2"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"

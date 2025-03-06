@@ -7,12 +7,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.seller_app.features.add_product.VariationItem
+import com.example.seller_app.core.model.product.ProductItem
+import com.example.seller_app.core.ui.component.ProductItemCard
 
 @Composable
 internal fun VariationsList(
     modifier: Modifier = Modifier,
-    variations: List<VariationItem>,
+    productItems: List<ProductItem>,
     productName: String,
     onRemove: (index: Int) -> Unit
 ) {
@@ -21,11 +22,12 @@ internal fun VariationsList(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(26.dp)
     ) {
-        variations.forEachIndexed { index, variation ->
+        productItems.forEachIndexed { index, variation ->
             item {
-                VariationCard(
+
+                ProductItemCard(
                     productName = productName,
-                    variation = variation,
+                    productItem = variation,
                     onRemove = { onRemove(index) } // Future implementation
                 )
             }

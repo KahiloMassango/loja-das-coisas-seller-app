@@ -30,26 +30,34 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.seller_app.core.ui.component.AppCheckbox
 import com.example.seller_app.core.ui.component.AppDropdownMenu
 import com.example.seller_app.core.ui.component.CenteredTopBar
 import com.example.seller_app.core.ui.component.CustomButton
+import com.example.seller_app.core.ui.component.DeleteDialog
 import com.example.seller_app.core.ui.component.ImagePicker
 import com.example.seller_app.core.ui.component.StoreTextField
 import com.example.seller_app.core.ui.toastMessage
+import com.example.seller_app.features.product_detail.model.ProductUiState
 
 
 @Composable
 internal fun DetailContent(
     modifier: Modifier = Modifier,
-    viewModel: ProductDetailViewModel,
-    onVariationsClick: () -> Unit,
+    uiState: ProductUiState,
+    updateImageUrl: (String) -> Unit,
+    updateName: (String) -> Unit,
+    onDelete: () -> Unit,
+    updateDescription: (String) -> Unit,
+    updateIsAvailable: (Boolean) -> Unit,
+    onVariationClick: () -> Unit,
+    onSaveUpdate: () -> Unit,
     onNavigateUp: () -> Unit
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var isEditing by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier,
@@ -79,14 +87,14 @@ internal fun DetailContent(
             ImagePicker(
                 imageUri = uiState.image,
                 enabled = isEditing,
-                onImageSelected = { viewModel.updateImage(it) }
+                onImageSelected = { updateImageUrl(it) }
             )
             Spacer(Modifier.height(30.dp))
 
             StoreTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = uiState.productName,
-                onValueChange = { viewModel.updateProductName(it) },
+                onValueChange = { updateName(it) },
                 enabled = isEditing,
                 label = "Nome do Produto",
                 placeholder = "Ex.: T-Shirt Mangas Curtas",
@@ -103,7 +111,7 @@ internal fun DetailContent(
                 modifier = Modifier
                     .heightIn(110.dp),
                 value = uiState.description,
-                onValueChange = { viewModel.updateDescription(it) },
+                onValueChange = { updateDescription(it) },
                 enabled = isEditing,
                 label = "Descrição",
                 singleLine = false,
@@ -123,21 +131,27 @@ internal fun DetailContent(
                     placeholder = "",
                     selectedOption = uiState.gender,
                     options = emptyList(),
-                    onSelect = { },
+                    onSelect = {},
                 )
                 AppDropdownMenu(
                     modifier = Modifier.weight(1f),
                     enabled = false,
                     label = "Categoria",
                     placeholder = "",
-                    selectedOption = uiState.category,
+                    selectedOption = uiState.category.name,
                     options = emptyList(),
-                    onSelect = { },
+                    onSelect = {},
                 )
             }
             Spacer(Modifier.height(20.dp))
+            AppCheckbox(
+                text = "Disponiblizar",
+                checked = uiState.isAvailable,
+                onCheckedChange = updateIsAvailable,
+                enabled = isEditing
+            )
+            Spacer(Modifier.height(20.dp))
             Row(
-                // modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(30.dp),
 
                 ) {
@@ -148,7 +162,7 @@ internal fun DetailContent(
                     )
                     CustomButton(
                         text = "Variações",
-                        onClick = onVariationsClick
+                        onClick = onVariationClick
                     )
                 } else {
                     CustomButton(
@@ -156,13 +170,30 @@ internal fun DetailContent(
                         onClick = {
                             if (uiState.productName.isNotEmpty() && uiState.description.isNotEmpty()) {
                                 isEditing = false
+                                onSaveUpdate()
                             } else {
                                 context.toastMessage("Preencha todos os campos")
                             }
                         }
                     )
+                    CustomButton(
+                        text = "Eliminar",
+                        onClick = { showDeleteDialog = true }
+                    )
                 }
             }
+        }
+        if (showDeleteDialog) {
+            DeleteDialog(
+                text = "Tem certeza que deseja excluir este producto?",
+                onConfirm = {
+                    onDelete()
+                    showDeleteDialog = false
+                },
+                onDismissRequest = {
+                    showDeleteDialog = false
+                }
+            )
         }
     }
 }

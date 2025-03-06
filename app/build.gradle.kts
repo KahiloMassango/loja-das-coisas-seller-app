@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.android.compose)
+    alias(libs.plugins.google.services)
 
 }
 
@@ -35,12 +36,14 @@ android {
 dependencies {
     implementation(projects.core.ui)
     implementation(projects.core.model)
+    implementation(projects.core.data)
 
     implementation(projects.features.home)
     implementation(projects.features.products)
     implementation(projects.features.finances)
     implementation(projects.features.addProduct)
     implementation(projects.features.productDetail)
+    implementation(projects.features.variations)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -50,6 +53,10 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.hilt.work)
+
+
+    implementation(libs.work.manager)
 
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.compose.navigation.ui)

@@ -15,6 +15,8 @@ import com.example.seller_app.features.home.navigation.homeScreen
 import com.example.seller_app.features.product_detail.navigation.navigateToProductDetail
 import com.example.seller_app.features.product_detail.navigation.productDetailScreen
 import com.example.seller_app.features.products.navigation.productsScreen
+import com.example.seller_app.features.variations.navigation.navigateToVariations
+import com.example.seller_app.features.variations.navigation.variationsScreen
 import com.example.seller_app.navigation.AppNavigationBar
 
 
@@ -36,12 +38,14 @@ fun App(
                 onNavigateUp = navController::navigateUp
             )
             productDetailScreen(
-                onNavigateUp = navController::navigateUp
+                onNavigateUp = navController::navigateUp,
+                onVariationsClick = { navController.navigateToVariations(it) }
             )
             productsScreen(
                 onAddNewProduct = { navController.navigateToAddProduct() },
                 onProductClick = { id -> navController.navigateToProductDetail(id) }
             )
+            variationsScreen(onNavigateUp = navController::navigateUp)
             financeScreen()
         }
         AppNavigationBar(

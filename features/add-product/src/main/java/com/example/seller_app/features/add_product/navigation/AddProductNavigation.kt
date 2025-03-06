@@ -16,8 +16,7 @@ fun NavGraphBuilder.addProductScreen(
 ) {
     composable<AddProductRoute> {
         AddProductScreen(
-            onNavigateUp = onNavigateUp
-
+            onNavigateUp = onNavigateUp,
         )
     }
 }

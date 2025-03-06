@@ -12,8 +12,11 @@ import kotlinx.coroutines.flow.Flow
 interface ColorDao {
 
     @Query("SELECT * FROM colors")
-    suspend fun getAllColors(): List<ColorEntity>
+    fun getAllColorsFlow(): Flow<List<ColorEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addColor(color: ColorEntity)
+    suspend fun insertColors(colors: List<ColorEntity>)
+
+    @Query("DELETE FROM colors WHERE id NOT IN (:ids)")
+    suspend fun deleteColorsNotIn(ids: List<String>)
 }

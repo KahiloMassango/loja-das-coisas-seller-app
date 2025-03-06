@@ -1,56 +1,81 @@
 package com.example.seller_app.features.product_detail
 
-import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.seller_app.core.ui.theme.SellerappTheme
-import com.example.seller_app.features.product_detail.model.ProductDetailContent
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.seller_app.features.product_detail.model.DetailUiState
 
 @Composable
 internal fun ProductDetailScreen(
     viewModel: ProductDetailViewModel = hiltViewModel(),
+    onVariationsClick: (String) -> Unit,
     onNavigateUp: () -> Unit
 ) {
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
-    var screen by rememberSaveable { mutableStateOf(ProductDetailContent.DETAIL) }
-
-    AnimatedContent(
-        targetState = screen, label = ""
-    ) { state ->
-        when (state) {
-            ProductDetailContent.DETAIL -> {
-                DetailContent(
-                    viewModel = viewModel,
-                    onVariationsClick = { screen = ProductDetailContent.VARIATIONS },
-                    onNavigateUp = onNavigateUp,
-                )
-            }
-            ProductDetailContent.VARIATIONS -> {
-                VariationsContent(
-                    viewModel = viewModel,
-                    onNavigateUp = { screen = ProductDetailContent.DETAIL }
-                )
-            }
+    when (uiState) {
+        is DetailUiState.Loading -> {
+            LoadingContent()
         }
+
+        is DetailUiState.Success -> {
+            DetailContent(
+                uiState = uiState.product,
+                onVariationClick = { onVariationsClick(uiState.product.id) },
+                onNavigateUp = onNavigateUp,
+                updateImageUrl = viewModel::updateImageUrl,
+                updateName = viewModel::updateProductName,
+                updateDescription = viewModel::updateDescription,
+                onSaveUpdate = viewModel::updatedProduct,
+                updateIsAvailable = viewModel::updateIsAvailable,
+                onDelete = {
+                    viewModel.deleteProduct()
+                    onNavigateUp()
+                }
+            )
+        }
+
+
+        is DetailUiState.Error -> {
+            ErrorContent(
+                message = uiState.message
+            )
+        }
+
     }
 }
 
 
-
-
-
-
-@Preview
 @Composable
-private fun Preview() {
-    SellerappTheme {
-        ProductDetailScreen(
-            onNavigateUp = {}
+internal fun ErrorContent(
+    message: String
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = message
         )
     }
 }
+
+
+@Composable
+internal fun LoadingContent(
+
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
+    }
+}
+

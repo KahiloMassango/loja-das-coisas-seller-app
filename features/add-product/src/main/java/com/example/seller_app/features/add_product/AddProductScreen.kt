@@ -10,18 +10,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.seller_app.core.ui.theme.SellerappTheme
+import com.example.seller_app.features.add_product.components.ProductDetailContent
+import com.example.seller_app.features.add_product.components.VariationsContent
 
 @Composable
-fun AddProductScreen(
+internal fun AddProductScreen(
     viewModel: AddProductViewModel = hiltViewModel(),
-    onNavigateUp: () -> Unit
+    onNavigateUp: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var screen by remember { mutableIntStateOf(1) }
     val genders by viewModel.genders.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()
-    val colorOptions by viewModel.colorOptions.collectAsStateWithLifecycle()
-    val sizeOptions by viewModel.sizeOptions.collectAsStateWithLifecycle()
+    val colorOptions by viewModel.colors.collectAsStateWithLifecycle()
+    val sizeOptions by viewModel.size.collectAsStateWithLifecycle()
 
     AnimatedContent(
         targetState = screen,
@@ -31,45 +33,31 @@ fun AddProductScreen(
             1 -> {
                 ProductDetailContent(
                     uiState = uiState,
-                    onNavigateUp = onNavigateUp,
-                    onVariationsClick = { screen = 2 },
-                    onGenderChange = viewModel::updateCategory,
-                    onCategoryChange = viewModel::updateSubCategory,
-                    onProductNameChange = viewModel::updateProductName,
-                    onDescriptionChange = viewModel::updateDescription,
-                    onImageChange = viewModel::updateImage,
                     genders = genders,
                     categories = categories,
-                    onSaveProduct = {}
+                    onNavigateUp = onNavigateUp,
+                    onVariationsClick = { screen = 2 },
+                    onGenderChange = viewModel::updateGender,
+                    onCategoryChange = viewModel::updateCategory,
+                    onProductNameChange = viewModel::updateName,
+                    onDescriptionChange = viewModel::updateDescription,
+                    onImageChange = viewModel::updateImage,
+                    updateIsAvailable = viewModel::updateIsAvailable,
+                    onSaveProduct = viewModel::saveProduct
                 )
             }
             2 -> {
                 VariationsContent(
-                    uiState = uiState,
+                    category = uiState.category!!,
                     onNavigateUp = { screen = 1 },
                     addVariation = viewModel::addVariation,
                     onRemoveVariation = viewModel::removeVariation,
                     colorOptions = colorOptions,
-                    sizeOptions = sizeOptions
+                    sizeOptions = sizeOptions,
+                    variations = uiState.variations
                 )
             }
         }
     }
 
-}
-
-
-
-
-@Preview
-@Composable
-private fun Preview() {
-    SellerappTheme {
-        /*AddVariationModal(
-            onDismissRequest = {}
-        )*/
-        AddProductScreen(
-            onNavigateUp = {}
-        )
-    }
 }

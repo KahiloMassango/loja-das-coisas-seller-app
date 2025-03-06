@@ -1,6 +1,5 @@
 package com.example.seller_app.core.ui.component
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,11 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.seller_app.core.model.product.Product
-import com.example.seller_app.core.ui.theme.SellerappTheme
 
 @Composable
 fun ProductCard(
@@ -37,21 +34,20 @@ fun ProductCard(
             containerColor = MaterialTheme.colorScheme.surface
         )
     ) {
-        Column(
-        ) {
+        Column{
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(184.dp)
                     .clip(RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)),
-                model = product.image,
+                model = product.imageUrl.replace("localhost", "10.0.2.2"),
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
 
             Text(
                 modifier = Modifier.padding(top = 4.dp),
-                text = product.title,
+                text = product.name,
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Normal
@@ -66,11 +62,3 @@ fun ProductCard(
     }
 }
 
-
-@ThemePreviews
-@Composable
-private fun Preview() {
-    SellerappTheme() {
-
-    }
-}

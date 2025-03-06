@@ -36,7 +36,6 @@ fun ImagePicker(
     enabled: Boolean = true,
     onImageSelected: (String) -> Unit
 ) {
-    val context = LocalContext.current
     val requester = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
@@ -93,7 +92,7 @@ fun ImagePicker(
             }
         } else {
             AsyncImage(
-                model = imageUri,
+                model = imageUri.replace("localhost", "10.0.2.2"),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(220.dp, 200.dp)

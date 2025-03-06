@@ -31,7 +31,7 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     implementation(libs.retrofit)
-    implementation(libs.retrofit.converter)
+    implementation(libs.gson.retrofit.converter)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

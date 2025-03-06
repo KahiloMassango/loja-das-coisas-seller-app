@@ -1,20 +1,34 @@
 package com.example.seller_app.core.data.di
 
-import com.example.seller_app.core.data.GenderRepository
-import com.example.seller_app.core.data.ColorRepository
-import com.example.seller_app.core.data.DefaultGenderRepository
-import com.example.seller_app.core.data.DefaultColorRepository
-import com.example.seller_app.core.data.DefaultSizeRepository
-import com.example.seller_app.core.data.DefaultCategoryRepository
-import com.example.seller_app.core.data.SizeRepository
-import com.example.seller_app.core.data.CategoryRepository
-import com.example.seller_app.core.database.dao.GenderDao
-import com.example.seller_app.core.database.dao.ColorDao
-import com.example.seller_app.core.database.dao.SizeDao
-import com.example.seller_app.core.database.dao.CategoryDao
+import android.content.Context
+import androidx.work.WorkManager
+import com.example.datastore.PreferencesDataSource
+import com.example.seller_app.core.data.CategoryRepositoryImpl
+import com.example.seller_app.core.data.ColorRepositoryImpl
+import com.example.seller_app.core.data.GenderRepositoryImpl
+import com.example.seller_app.core.data.PreferenceRepositoryImpl
+import com.example.seller_app.core.data.ProductRepositoryImpl
+import com.example.seller_app.core.data.SizeRepositoryImpl
+import com.example.seller_app.core.data.SyncManager
+import com.example.seller_app.core.data.repositories.CategoryRepository
+import com.example.seller_app.core.data.repositories.ColorRepository
+import com.example.seller_app.core.data.repositories.GenderRepository
+import com.example.seller_app.core.data.repositories.PreferenceRepository
+import com.example.seller_app.core.data.repositories.ProductRepository
+import com.example.seller_app.core.data.repositories.SizeRepository
+import com.example.seller_app.core.database.datasources.CategoryLocalDataSource
+import com.example.seller_app.core.database.datasources.ColorLocalDataSource
+import com.example.seller_app.core.database.datasources.GenderLocalDataSource
+import com.example.seller_app.core.database.datasources.SizeLocalDataSource
+import com.example.seller_app.core.network.datasources.CategoryRemoteDataSource
+import com.example.seller_app.core.network.datasources.ColorRemoteDataSource
+import com.example.seller_app.core.network.datasources.GenderRemoteDataSource
+import com.example.seller_app.core.network.datasources.ProductRemoteDataSource
+import com.example.seller_app.core.network.datasources.SizeRemoteDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 
 
@@ -23,23 +37,46 @@ import dagger.hilt.components.SingletonComponent
 object DataModule {
 
     @Provides
-    fun provideGenderRepository(
-        genderDao: GenderDao
-    ): GenderRepository = DefaultGenderRepository(genderDao)
+    fun providesSyncManager(
+        workManager: WorkManager,
+    ): SyncManager = SyncManager(workManager)
+
 
     @Provides
-    fun provideSubCategoryRepository(
-        categoryDao: CategoryDao
-    ): CategoryRepository = DefaultCategoryRepository(categoryDao)
+    fun providesPreferencesRepository(
+        preferenceDatasource: PreferencesDataSource
+    ): PreferenceRepository = PreferenceRepositoryImpl(preferenceDatasource)
+
+    @Provides
+    fun provideGenderRepository(
+        localDataSource: GenderLocalDataSource,
+        remoteDataSource: GenderRemoteDataSource
+    ): GenderRepository = GenderRepositoryImpl(localDataSource, remoteDataSource)
+
+    @Provides
+    fun provideCategoryRepository(
+        localDataSource: CategoryLocalDataSource,
+        remoteDataSource: CategoryRemoteDataSource
+    ): CategoryRepository = CategoryRepositoryImpl(localDataSource, remoteDataSource)
 
     @Provides
     fun provideColorRepository(
-        colorDao: ColorDao
-    ): ColorRepository = DefaultColorRepository(colorDao)
+        localDataSource: ColorLocalDataSource,
+        remoteDataSource: ColorRemoteDataSource
+    ): ColorRepository = ColorRepositoryImpl(localDataSource, remoteDataSource)
 
     @Provides
     fun provideSizeRepository(
-        sizeDao: SizeDao
-    ): SizeRepository = DefaultSizeRepository(sizeDao)
+        localDataSource: SizeLocalDataSource,
+        remoteDataSource: SizeRemoteDataSource
+    ): SizeRepository = SizeRepositoryImpl(localDataSource, remoteDataSource)
 
+    @Provides
+    fun provideProductRepository(
+        productRemoteDataSource: ProductRemoteDataSource,
+        @ApplicationContext
+        context: Context
+    ): ProductRepository {
+        return ProductRepositoryImpl(productRemoteDataSource, context)
+    }
 }

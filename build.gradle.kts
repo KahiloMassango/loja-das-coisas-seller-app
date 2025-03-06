@@ -19,11 +19,11 @@ plugins {
 
 fun BaseExtension.defaultConfig() {
 
-    compileSdkVersion(34)
+    compileSdkVersion(35)
 
     defaultConfig {
         minSdk = 28
-        targetSdk = 34
+        targetSdk = 35
         consumerProguardFiles("consumer-rules.pro")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

@@ -1,104 +1,126 @@
 package com.example.seller_app.features.product_detail
 
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.seller_app.core.data.ColorRepository
-import com.example.seller_app.core.data.SizeRepository
-import com.example.seller_app.core.model.product.VariationItem
-import com.example.seller_app.features.product_detail.model.VariationState
+import com.example.seller_app.core.data.repositories.ProductRepository
+import com.example.seller_app.features.product_detail.model.DetailUiState
+import com.example.seller_app.features.product_detail.model.ProductUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProductDetailViewModel @Inject constructor(
-    private val colorRepository: ColorRepository,
-    private val sizeRepository: SizeRepository
+internal class ProductDetailViewModel @Inject constructor(
+    private val productRepository: ProductRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private var _uiState = MutableStateFlow(ProductDetailUiState())
+    val productId = savedStateHandle.get<String>("id")!!
+
+    private val _uiState = MutableStateFlow<DetailUiState>(DetailUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
-    private val _selectedVariation = MutableStateFlow<VariationItem?>(null)
-    val selectedVariation: StateFlow<VariationItem?> = _selectedVariation.asStateFlow()
-
-    private val _colorOptions = MutableStateFlow<List<String>>(emptyList())
-    val colorOptions = _colorOptions.asStateFlow()
-
-    private val _sizeOptions = MutableStateFlow<List<String>>(emptyList())
-    val sizeOptions = _sizeOptions.asStateFlow()
+    lateinit var product: ProductUiState
 
     init {
+        loadProduct()
+    }
+
+    private fun loadProduct() {
         viewModelScope.launch {
-            _uiState.update { ProductDetailUiState() }
-            _colorOptions.value = colorRepository.getAllColors()
-            _sizeOptions.value = sizeRepository.getSizesByCategory(_uiState.value.category)
-
-        }
-    }
-
-    fun updateProductName(name: String) {
-        _uiState.update { it.copy(productName = name) }
-    }
-
-    fun updateDescription(description: String) {
-        _uiState.update { it.copy(description = description) }
-    }
-
-    fun updateImage(image: String) {
-        if (image.isNotBlank()) {
-            _uiState.update { it.copy(image = image) }
-        }
-    }
-
-    fun updateProduct() {
-        // Salvar o produto no banco de dados
-    }
-
-    fun selectVariation(variationId: String) {
-        val variation = _uiState.value.variations.find { it.id == variationId }
-        _selectedVariation.value = variation
-    }
-
-    fun updateVariation(updatedItem: VariationItem) {
-        // TODO(Upload the updated variation to the server)
-        _uiState.update { state ->
-            state.copy(
-                variations = state.variations.map {
-                    if (it.id == updatedItem.id) updatedItem else it
+            productRepository.getProductById(productId)
+                .onSuccess { result ->
+                    _uiState.value = DetailUiState.Success(
+                        ProductUiState(
+                            id = productId,
+                            productName = result.name,
+                            description = result.description,
+                            image = result.imageUrl,
+                            gender = result.gender.name,
+                            category = result.category,
+                            isAvailable = result.isAvailable
+                        ).also {
+                            product = it
+                        }
+                    )
                 }
-            )
+                .onFailure {
+                    _uiState.value = DetailUiState.Error(it.message ?: "Unknown error")
+                }
         }
     }
 
-    fun addVariation(variation: VariationState) {
-        // TODO(Upload the new variation to the server)
-
-    }
-
-    fun deleteVariation(variationId: String) {
-        // TODO(Delete the variation from the server)
-        _uiState.update { state ->
-            state.copy(
-                variations = state.variations.filter { it.id != variationId }
-            )
+    fun updateProductName(value: String) {
+        if (_uiState.value is DetailUiState.Success) {
+            val currentProduct = (_uiState.value as DetailUiState.Success).product
+            _uiState.value = DetailUiState.Success(currentProduct.copy(productName = value))
         }
     }
 
-    fun clearSelectedVariation() {
-        _selectedVariation.value = null
+    fun updateDescription(value: String) {
+        if (_uiState.value is DetailUiState.Success) {
+            val currentProduct = (_uiState.value as DetailUiState.Success).product
+            _uiState.value = DetailUiState.Success(currentProduct.copy(description = value))
+        }
     }
+
+    fun updateImageUrl(value: String) {
+        if (_uiState.value is DetailUiState.Success) {
+            val currentProduct = (_uiState.value as DetailUiState.Success).product
+            if (value != product.image) {
+                _uiState.value = DetailUiState.Success(currentProduct.copy(image = value))
+            }
+        }
+    }
+
+    fun updateIsAvailable(value: Boolean) {
+        if (_uiState.value is DetailUiState.Success) {
+            val currentProduct = (_uiState.value as DetailUiState.Success).product
+            _uiState.value = DetailUiState.Success(currentProduct.copy(isAvailable = value))
+        }
+    }
+
+    fun updatedProduct() {
+        viewModelScope.launch {
+            val state = (_uiState.value as DetailUiState.Success).product
+            productRepository.updateProduct(
+                productId = productId,
+                name = state.productName,
+                isAvailable = state.isAvailable,
+                description = state.description,
+                image = if (product.image != state.image) state.image else null
+            ).onSuccess { product ->
+                _uiState.value = DetailUiState.Success(
+                    ProductUiState(
+                        id = productId,
+                        productName = product.name,
+                        description = product.description,
+                        image = product.imageUrl,
+                        gender = state.gender,
+                        category = state.category,
+                        isAvailable = product.isAvailable
+                    )
+                )
+            }.onFailure {
+                Log.d("ProductDetailViewModel", "update error: $it")
+            }
+        }
+    }
+
+    fun deleteProduct() {
+        viewModelScope.launch {
+            productRepository.deleteProduct(productId)
+                .onSuccess {
+                    Log.d("ProductDetailViewModel", "delete product: success")
+                }.onFailure {
+                    Log.d("ProductDetailViewModel", "delete error: $it")
+                }
+        }
+    }
+
 }
 
-data class ProductDetailUiState(
-    val productName: String = "Calça Jeans Rasgada",
-    val description: String = "Calça confortável, de algodão",
-    val image: String = "https://images.tcdn.com.br/img/img_prod/769687/calca_jeans_masculina_slim_algodao_com_elastano_40_e_44_wolfgan_1439_variacao_9653_1_6b0685f12cef1f1e7ef4dbaf36e6a64c.jpg",
-    val gender: String = "Homens",
-    val category: String = "Roupas",
-    val variations: List<VariationItem> = listOf(VariationItem("", "Preto", "", 5.800, "XL", 6))
-)

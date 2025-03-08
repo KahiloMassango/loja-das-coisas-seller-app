@@ -43,7 +43,8 @@ dependencies {
     implementation(projects.features.finances)
     implementation(projects.features.addProduct)
     implementation(projects.features.productDetail)
-    implementation(projects.features.variations)
+    implementation(projects.features.productItems)
+    implementation(projects.features.authentication)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -54,6 +55,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.hilt.work)
+    implementation(libs.androidx.splashscreen)
 
 
     implementation(libs.work.manager)

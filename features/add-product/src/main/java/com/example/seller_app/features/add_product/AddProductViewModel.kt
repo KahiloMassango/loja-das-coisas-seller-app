@@ -10,7 +10,8 @@ import com.example.seller_app.core.data.repositories.ProductRepository
 import com.example.seller_app.core.data.repositories.SizeRepository
 import com.example.seller_app.core.model.Gender
 import com.example.seller_app.core.model.product.Category
-import com.example.seller_app.core.model.product.ProductItem
+import com.example.seller_app.core.model.product.ProductItemRequest
+import com.example.seller_app.core.model.product.ProductRequest
 import com.example.seller_app.core.model.product.ProductWithVariation
 import com.example.seller_app.features.add_product.model.ProductUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,7 +60,7 @@ internal class AddProductViewModel @Inject constructor(
         )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val size = uiState.mapLatest { state ->
+    val sizes = uiState.mapLatest { state ->
         if (state.category != null) {
             Log.d("Add Viewmodel", "category: ${state.category}")
             sizeRepository.getSizesByCategory(state.category.id)
@@ -91,27 +92,27 @@ internal class AddProductViewModel @Inject constructor(
     fun updateGender(gender: Gender) {
         _uiState.update { it.copy(gender = gender) }
         // Clear variation list
-        _uiState.update { it.copy(variations = emptyList()) }
+        _uiState.update { it.copy(productItems = emptyList()) }
     }
 
     fun updateCategory(category: Category) {
         _uiState.value = _uiState.value.copy(category = category)
         // Clear variation list
-        _uiState.update { it.copy(variations = emptyList()) }
+        _uiState.update { it.copy(productItems = emptyList()) }
     }
 
     fun updateIsAvailable(value: Boolean) {
         _uiState.value = _uiState.value.copy(isAvailable = value)
     }
 
-    fun addVariation(variation: ProductItem) {
-        _uiState.update { it.copy(variations = it.variations + variation) }
+    fun addProductItem(productItem: ProductItemRequest) {
+        _uiState.update { it.copy(productItems = it.productItems + productItem) }
     }
 
     fun removeVariation(index: Int) {
         _uiState.update {
             it.copy(
-                variations = it.variations - it.variations[index]
+                productItems = it.productItems - it.productItems[index]
             )
         }
     }
@@ -119,21 +120,17 @@ internal class AddProductViewModel @Inject constructor(
     fun saveProduct() {
         viewModelScope.launch {
             productRepository.addProduct(
-                ProductWithVariation(
-                    id = "",
+                ProductRequest(
                     name = _uiState.value.productName,
                     description = _uiState.value.description,
                     imageUrl = _uiState.value.image,
                     isAvailable = _uiState.value.isAvailable,
                     category = _uiState.value.category!!,
                     gender = _uiState.value.gender!!,
-                    productItems = _uiState.value.variations
+                    productItems = _uiState.value.productItems
                 )
             ).onSuccess {
-                productRepository.addProductItemList(
-                    it.id,
-                    _uiState.value.variations
-                )
+
                 Log.d("AddProductViewModel", "add product: success")
             }
                 .onFailure {

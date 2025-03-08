@@ -39,7 +39,7 @@ interface ProductRemoteDataSource {
         image: MultipartBody.Part?,
         sizeId: RequestBody?,
         colorId: RequestBody?
-    ): Result<ProductItemDtoRes>
+    ): Result<Unit>
 
     suspend fun updateProductItem(
         productId: String,
@@ -47,7 +47,7 @@ interface ProductRemoteDataSource {
         stockQuantity: RequestBody,
         price: RequestBody,
         image: MultipartBody.Part?
-    ): Result<ProductWithVariationRes>
+    ): Result<Unit>
 
     suspend fun deleteProductItem(productId: String, productItemId: String): Result<Unit>
 

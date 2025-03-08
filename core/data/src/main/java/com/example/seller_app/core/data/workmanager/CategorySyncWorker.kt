@@ -22,16 +22,12 @@ class CategorySyncWorker @AssistedInject constructor (
         val firebaseTimestamp = 645364L
         val localTimestamp = preferenceRepository.getCategoriesLastUpdated()
 
-       return if(localTimestamp == null || firebaseTimestamp > localTimestamp) {
-           try {
-               categoryRepository.sync()
-               preferenceRepository.updateCategoriesLastUpdated(firebaseTimestamp)
-               Result.success()
-           } catch (e: Exception) {
-               Result.retry()
-           }
-        } else {
-            Result.success()
+       return try {
+           categoryRepository.sync()
+           preferenceRepository.updateCategoriesLastUpdated(firebaseTimestamp)
+           Result.success()
+       } catch (e: Exception) {
+           Result.retry()
        }
 
     }

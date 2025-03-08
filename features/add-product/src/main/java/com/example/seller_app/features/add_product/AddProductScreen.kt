@@ -6,12 +6,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.seller_app.core.ui.theme.SellerappTheme
 import com.example.seller_app.features.add_product.components.ProductDetailContent
-import com.example.seller_app.features.add_product.components.VariationsContent
+import com.example.seller_app.features.add_product.components.ProductItemsContent
 
 @Composable
 internal fun AddProductScreen(
@@ -23,7 +21,7 @@ internal fun AddProductScreen(
     val genders by viewModel.genders.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     val colorOptions by viewModel.colors.collectAsStateWithLifecycle()
-    val sizeOptions by viewModel.size.collectAsStateWithLifecycle()
+    val sizeOptions by viewModel.sizes.collectAsStateWithLifecycle()
 
     AnimatedContent(
         targetState = screen,
@@ -47,14 +45,14 @@ internal fun AddProductScreen(
                 )
             }
             2 -> {
-                VariationsContent(
+                ProductItemsContent(
                     category = uiState.category!!,
                     onNavigateUp = { screen = 1 },
-                    addVariation = viewModel::addVariation,
+                    addVariation = viewModel::addProductItem,
                     onRemoveVariation = viewModel::removeVariation,
                     colorOptions = colorOptions,
                     sizeOptions = sizeOptions,
-                    variations = uiState.variations
+                    productItems =  uiState.productItems
                 )
             }
         }

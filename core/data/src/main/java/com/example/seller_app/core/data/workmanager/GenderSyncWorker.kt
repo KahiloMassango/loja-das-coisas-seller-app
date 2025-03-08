@@ -20,16 +20,12 @@ class GenderSyncWorker @AssistedInject constructor (
         val remoteTimestamp = 646546L
         val localTimestamp = preferenceRepository.getSizesLastUpdated()
 
-        return if(localTimestamp == null || remoteTimestamp > localTimestamp) {
-            try {
-                genderRepository.sync()
-                preferenceRepository.updateSizesLastUpdated(remoteTimestamp)
-                Result.success()
-            } catch (e: Exception) {
-                Result.retry()
-            }
-        } else {
+        return try {
+            genderRepository.sync()
+            preferenceRepository.updateSizesLastUpdated(remoteTimestamp)
             Result.success()
+        } catch (e: Exception) {
+            Result.retry()
         }
 
     }

@@ -21,17 +21,17 @@ class SizeSyncWorker @AssistedInject constructor (
         val firebaseTimestamp = 646546L
         val localTimestamp = preferenceRepository.getSizesLastUpdated()
 
-        return if(localTimestamp == null || firebaseTimestamp > localTimestamp) {
-            try {
+        return /*if(localTimestamp == null || firebaseTimestamp > localTimestamp) {
+            */try {
                 sizeRepository.sync()
-                preferenceRepository.updateSizesLastUpdated(firebaseTimestamp)
+                //preferenceRepository.updateSizesLastUpdated(firebaseTimestamp)
                 Result.success()
             } catch (e: Exception) {
                 Result.retry()
             }
-        } else {
+        /*} else {
             Result.success()
-        }
+        }*/
 
     }
 }

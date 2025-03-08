@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.datastore.JwtLocalManager
 import com.example.datastore.PreferencesDataSource
+import com.example.datastore.datasource.JwtLocalDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +25,13 @@ object DataStoreModule {
     fun providePreferenceDataSource(
         @ApplicationContext context: Context
     ): PreferencesDataSource = PreferencesDataSource(context.dataStore)
+
+
+    @Provides
+    @Singleton
+    fun provideJwtLocalDataSource(
+        @ApplicationContext context: Context
+    ): JwtLocalDataSource = JwtLocalManager(context.dataStore)
 
 
 }

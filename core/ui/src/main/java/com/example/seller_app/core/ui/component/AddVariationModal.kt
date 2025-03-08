@@ -1,6 +1,5 @@
 package com.example.seller_app.core.ui.component
 
-
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,7 +26,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.example.seller_app.core.model.product.Category
 import com.example.seller_app.core.model.product.Color
-import com.example.seller_app.core.model.product.ProductItem
+import com.example.seller_app.core.model.product.ProductItemRequest
 import com.example.seller_app.core.model.product.Size
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,8 +37,9 @@ fun AddVariationModal(
     category: Category,
     colorOptions: List<Color>,
     sizeOptions: List<Size>,
-    onAddVariation: (ProductItem) -> Unit
+    onAddVariation: (ProductItemRequest) -> Unit
 ) {
+
 
     var imageUrl by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
@@ -91,18 +91,17 @@ fun AddVariationModal(
             CustomButton(
                 text = "Adicionar",
                 onClick = {
-                    if (!isValidVariation(category, color, size, stockQuantity, price)) {
+                    if (!isValidProductItem(category, color, size, stockQuantity, price) || imageUrl.isBlank()) {
                         Toast.makeText(context, "Preencha todos os campos", Toast.LENGTH_SHORT)
                             .show()
                     } else {
                         onAddVariation(
-                            ProductItem(
-                                id = "",
-                                price = price.toInt(),
+                            ProductItemRequest(
                                 stockQuantity = stockQuantity.toInt(),
+                                price = price.toInt(),
                                 imageUrl = imageUrl,
                                 size = size,
-                                color = color,
+                                color = color
                             )
                         )
                         onDismissRequest()
@@ -129,7 +128,7 @@ fun AddVariationModal(
 
 }
 
-private fun isValidVariation(
+private fun isValidProductItem(
     category: Category,
     color: Color?,
     size: Size?,

@@ -25,6 +25,44 @@ class SyncManager(
         ).enqueue()
     }
 
+    fun syncCategories() {
+        val workRequest = OneTimeWorkRequest.from(CategorySyncWorker::class.java)
 
+        workManager.enqueueUniqueWork(
+            "syncCategories",
+            ExistingWorkPolicy.REPLACE,
+            workRequest
+        )
+    }
+
+    fun syncSizes() {
+        val workRequest = OneTimeWorkRequest.from(SizeSyncWorker::class.java)
+
+        workManager.enqueueUniqueWork(
+            "syncSizes",
+            ExistingWorkPolicy.REPLACE,
+            workRequest
+        )
+    }
+
+    fun syncColors() {
+        val workRequest = OneTimeWorkRequest.from(ColorSyncWorker::class.java)
+
+        workManager.enqueueUniqueWork(
+            "syncColors",
+            ExistingWorkPolicy.REPLACE,
+            workRequest
+        )
+    }
+
+    fun syncGenders() {
+        val workRequest = OneTimeWorkRequest.from(GenderSyncWorker::class.java)
+
+        workManager.enqueueUniqueWork(
+            "syncGenders",
+            ExistingWorkPolicy.REPLACE,
+            workRequest
+        )
+    }
 
 }

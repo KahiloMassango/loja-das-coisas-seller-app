@@ -3,6 +3,7 @@ package com.example.seller_app.features.add_product.model
 import com.example.seller_app.core.model.Gender
 import com.example.seller_app.core.model.product.Category
 import com.example.seller_app.core.model.product.ProductItem
+import com.example.seller_app.core.model.product.ProductItemRequest
 
 internal data class ProductUiState(
     val productName: String = "",
@@ -11,6 +12,6 @@ internal data class ProductUiState(
     val gender: Gender? = null,
     val category: Category? = null,
     val isAvailable: Boolean = false,
-    val variations: List<ProductItem> = emptyList()
+    val productItems: List<ProductItemRequest> = emptyList()
 )
 

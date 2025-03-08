@@ -1,6 +1,7 @@
 package com.example.seller_app.core.data.workmanager
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -19,16 +20,13 @@ class ColorSyncWorker @AssistedInject constructor (
     override suspend fun doWork(): Result {
         val firebaseTimestamp = 2427L
         val localTimestamp = preferenceRepository.getColorsLastUpdated()
-        return if (localTimestamp == null || firebaseTimestamp > localTimestamp) {
-            try {
-                colorRepository.sync()
-                preferenceRepository.updateColorsLastUpdated(firebaseTimestamp)
-                Result.success()
-            } catch (e: Exception) {
-                Result.retry()
-            }
-        } else {
+        return try {
+            colorRepository.sync()
+            //preferenceRepository.updateColorsLastUpdated(firebaseTimestamp)
             Result.success()
+        } catch (e: Exception) {
+            Log.e("ColorSyncWorker", "doWork: ", e)
+            Result.retry()
         }
     }
 }

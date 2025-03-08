@@ -6,7 +6,7 @@ import com.example.seller_app.core.network.datasources.ProductRemoteDataSource
 import com.example.seller_app.core.network.model.response.product.ProductDtoRes
 import com.example.seller_app.core.network.model.response.product.ProductItemDtoRes
 import com.example.seller_app.core.network.model.response.product.ProductWithVariationRes
-import com.example.seller_app.core.network.retrofit.RetrofitAppNetworkApi
+import com.example.seller_app.core.network.retrofit.AppApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
@@ -16,7 +16,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 class ProductNetworkDataSource @Inject constructor(
-    private val appNetworkApi: RetrofitAppNetworkApi
+    private val appNetworkApi: AppApiService
 ) : ProductRemoteDataSource {
 
     override suspend fun getProducts(): Result<List<ProductDtoRes>> {
@@ -140,10 +140,10 @@ class ProductNetworkDataSource @Inject constructor(
         image: MultipartBody.Part?,
         sizeId: RequestBody?,
         colorId: RequestBody?
-    ): Result<ProductItemDtoRes> {
+    ): Result<Unit> {
         return withContext(Dispatchers.IO) {
             try {
-                val response = appNetworkApi.addProductItem(
+                appNetworkApi.addProductItem(
                     productId = productId,
                     stockQuantity = stockQuantity,
                     price = price,
@@ -151,7 +151,7 @@ class ProductNetworkDataSource @Inject constructor(
                     sizeId = sizeId,
                     colorId = colorId
                 )
-                Result.success(response.data)
+                Result.success(Unit)
             } catch (e: HttpException) {
                 Result.failure(Exception(extractErrorMessage(e)))
             } catch (e: IOException) {
@@ -166,17 +166,17 @@ class ProductNetworkDataSource @Inject constructor(
         stockQuantity: RequestBody,
         price: RequestBody,
         image: MultipartBody.Part?
-    ): Result<ProductWithVariationRes> {
+    ): Result<Unit> {
         return withContext(Dispatchers.IO) {
             try {
-                val response = appNetworkApi.updateProductItem(
+                appNetworkApi.updateProductItem(
                     productId = productId,
-                    variationId = variationId,
+                    productItemId = variationId,
                     stockQuantity = stockQuantity,
                     price = price,
                     image = image
                 )
-                Result.success(response.data)
+                Result.success(Unit)
             } catch (e: HttpException) {
                 val response = e.message
                 Result.failure(Exception("response: $response"))

@@ -22,3 +22,14 @@ data class ProductWithVariation(
     val productItems: List<ProductItem>
 )
 
+
+data class ProductRequest(
+    val name: String,
+    val description: String,
+    val imageUrl: String,
+    val isAvailable: Boolean,
+    val category: Category,
+    val gender: Gender,
+    val productItems: List<ProductItemRequest>
+)
+

@@ -15,6 +15,7 @@ composeBom = "2024.11.00"
 material3 = "1.3.1"
 material3Adaptive = "1.0.0"
 composeNavigation = "2.8.0-beta01"
+splashScreen = "1.0.1"
 
 # Firebase and Play Services
 firebaseBom = "33.9.0"
@@ -28,6 +29,7 @@ workManager = "2.10.0"
 # Networking and Serialization
 retrofit = "2.11.0"
 kotlinSerialization = "1.7.3"
+okhttpBom = "4.12.0"
 
 # Image Loading
 coilCompose = "2.6.0"
@@ -72,6 +74,8 @@ androidx-material3-adaptive-navigation = { group = "androidx.compose.material3.a
 androidx-material3-adaptive-navigation-suite = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite" }
 androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation" }
 androidx-compose-navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "composeNavigation" }
+androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen" }
+
 
 # Firebase
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
@@ -89,6 +93,9 @@ play-services-location = { module = "com.google.android.gms:play-services-locati
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 gson-retrofit-converter = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
+okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttpBom" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
+
 
 # Image Loading
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilCompose" }

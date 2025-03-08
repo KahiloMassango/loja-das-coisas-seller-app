@@ -22,6 +22,7 @@ android {
 
 dependencies {
     implementation(projects.core.model)
+    implementation(projects.core.datastore)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -29,6 +30,9 @@ dependencies {
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.okhttp.logging.interceptor)
 
     implementation(libs.retrofit)
     implementation(libs.gson.retrofit.converter)

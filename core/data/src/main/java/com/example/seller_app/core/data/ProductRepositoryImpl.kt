@@ -7,10 +7,10 @@ import com.example.seller_app.core.data.model.getFileFromUri
 import com.example.seller_app.core.data.model.toMultipart
 import com.example.seller_app.core.data.repositories.ProductRepository
 import com.example.seller_app.core.model.product.Product
-import com.example.seller_app.core.model.product.ProductItem
+import com.example.seller_app.core.model.product.ProductItemRequest
+import com.example.seller_app.core.model.product.ProductRequest
 import com.example.seller_app.core.model.product.ProductWithVariation
 import com.example.seller_app.core.network.datasources.ProductRemoteDataSource
-import com.example.seller_app.core.network.model.response.product.ProductWithVariationRes
 import com.example.seller_app.core.network.model.response.product.asExternalModel
 
 class ProductRepositoryImpl(
@@ -34,7 +34,7 @@ class ProductRepositoryImpl(
         return remoteDataSource.getProductById(productId).mapCatching { it.asExternalModel() }
     }
 
-    override suspend fun addProduct(request: ProductWithVariation): Result<Product> {
+    override suspend fun addProduct(request: ProductRequest): Result<Product> {
         return remoteDataSource.addProduct(
             name = request.name.toMultipart(),
             isAvailable = request.isAvailable.toMultipart(),
@@ -43,6 +43,10 @@ class ProductRepositoryImpl(
             categoryId = request.category.id.toMultipart(),
             genderId = request.gender.id.toMultipart(),
         ).mapCatching {
+            addProductItemList(
+                it.id,
+                request.productItems
+            )
             it.asExternalModel()
         }
     }
@@ -72,8 +76,8 @@ class ProductRepositoryImpl(
 
     override suspend fun addProductItem(
         productId: String,
-        request: ProductItem
-    ): Result<ProductItem> {
+        request: ProductItemRequest
+    ): Result<Unit>{
         Log.d("TAG", "addProductItem: $request")
         return remoteDataSource.addProductItem(
             productId = productId,
@@ -82,14 +86,12 @@ class ProductRepositoryImpl(
             image = getFileFromUri(Uri.parse(request.imageUrl), context).toMultipart(),
             sizeId = request.size?.id?.toMultipart(),
             colorId = request.color?.id?.toMultipart(),
-        ).mapCatching {
-            it.asExternalModel()
-        }
+        )
     }
 
     override suspend fun addProductItemList(
         productId: String,
-        request: List<ProductItem>
+        request: List<ProductItemRequest>
     ): Result<Unit> {
         request.forEach {
             addProductItem(productId, it)
@@ -100,14 +102,17 @@ class ProductRepositoryImpl(
 
     override suspend fun updateProductItem(
         productId: String,
-        request: ProductItem
-    ): Result<ProductWithVariationRes> {
+        productItemId: String,
+        stockQuantity: Int,
+        price: Int,
+        image: String?
+    ): Result<Unit> {
         return remoteDataSource.updateProductItem(
             productId = productId,
-            variationId = request.id,
-            stockQuantity = request.stockQuantity.toMultipart(),
-            price = request.price.toMultipart(),
-            image = getFileFromUri(Uri.parse(request.imageUrl), context).toMultipart(),
+            variationId = productItemId,
+            stockQuantity = stockQuantity.toMultipart(),
+            price = price.toMultipart(),
+            image = image?.let { getFileFromUri(Uri.parse(it), context).toMultipart() },
         )
     }
 

@@ -22,7 +22,7 @@ import com.example.seller_app.core.database.model.CategoryEntity
         SizeEntity::class,
     ],
     version = 1,
-    exportSchema = true,
+    exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun genderDao(): GenderDao

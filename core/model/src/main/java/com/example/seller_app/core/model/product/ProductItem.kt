@@ -9,3 +9,4 @@ data class ProductItem(
     val size: Size?,
     val stockQuantity: Int
 )
+

@@ -13,7 +13,7 @@ class AccessTokenInterceptor @Inject constructor(
 
     companion object {
         const val AUTHORIZATION_HEADER = "Authorization"
-        const val TOKEN_TYPE = "barer"
+        const val TOKEN_TYPE = "bearer"
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {

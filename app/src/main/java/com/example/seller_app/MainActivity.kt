@@ -10,7 +10,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.rememberNavController
 import com.example.seller_app.core.ui.theme.SellerappTheme
+import com.example.seller_app.features.authentication.login.navigation.LoginRoute
+import com.example.seller_app.features.home.navigation.HomeRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -34,9 +37,13 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.surface
                 ) {
+                    val navController = rememberNavController()
                     val isLoggedIn by appViewModel.isLoggedInFlow.collectAsState(false)
+
+                    val startDestination: Any = if (isLoggedIn) HomeRoute else LoginRoute
                     App(
-                        isLoggedIn = isLoggedIn,
+                        navController = navController,
+                        startDestination = startDestination
                     )
                 }
             }

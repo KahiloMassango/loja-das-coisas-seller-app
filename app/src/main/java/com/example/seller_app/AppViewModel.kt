@@ -23,8 +23,9 @@ class AppViewModel @Inject constructor(
     var showSplashScreen by mutableStateOf(true)
         private set
 
-    init {
+    val isLoggedIn: Boolean by mutableStateOf(false)
 
+    init {
         syncManager.syncCategories()
         syncManager.syncSizes()
         syncManager.syncColors()

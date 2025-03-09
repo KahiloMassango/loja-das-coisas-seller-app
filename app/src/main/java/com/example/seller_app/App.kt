@@ -28,10 +28,9 @@ import com.example.seller_app.navigation.AppNavigationBar
 @Composable
 fun App(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
-    isLoggedIn: Boolean,
+    navController: NavHostController,
+    startDestination: Any
 ) {
-    val startDestination: Any = if (isLoggedIn) HomeRoute else LoginRoute
     Column(
         modifier = modifier.fillMaxSize()
     ){

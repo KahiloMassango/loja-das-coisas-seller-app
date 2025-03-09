@@ -39,7 +39,6 @@ import com.example.seller_app.core.ui.component.ProductCard
 import com.example.seller_app.features.products.components.Header
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ProductsScreen(
     modifier: Modifier = Modifier,
@@ -47,7 +46,7 @@ internal fun ProductsScreen(
     onAddNewProduct: () -> Unit,
     onProductClick: (String) -> Unit
 ) {
-    val products by viewModel.products.collectAsState()
+    val products by viewModel.products.collectAsStateWithLifecycle()
     val genders by viewModel.genders.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     val selectedGender by viewModel.currentGender.collectAsState()

@@ -25,7 +25,7 @@ internal object OkhttpModule {
         accessTokenInterceptor: AccessTokenInterceptor,
         authenticatorInterceptor: AuthenticatorInterceptor
     ): OkHttpClient {
-       // val loggingInterceptor = HttpLoggingInterceptor()
+        //val loggingInterceptor = HttpLoggingInterceptor()
         //loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
             .authenticator(authenticatorInterceptor)

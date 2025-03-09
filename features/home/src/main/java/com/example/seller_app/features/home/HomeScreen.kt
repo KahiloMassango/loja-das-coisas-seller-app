@@ -1,5 +1,6 @@
 package com.example.seller_app.features.home
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -16,6 +17,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,7 +47,7 @@ internal fun HomeScreen(
 
     when (uiState) {
         is HomeUiState.Loading -> LoadingScreen()
-        is HomeUiState.Error -> ErrorScreen(uiState.message, retry = viewModel::loadOrders)
+        is HomeUiState.Error -> ErrorScreen(uiState.message, retry = {})
         is HomeUiState.Success -> HomeScreenContent(
             modifier = modifier,
             totalPendingOrders = uiState.totalPendingOrders,

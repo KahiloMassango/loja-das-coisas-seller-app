@@ -78,7 +78,6 @@ class ProductRepositoryImpl(
         productId: String,
         request: ProductItemRequest
     ): Result<Unit>{
-        Log.d("TAG", "addProductItem: $request")
         return remoteDataSource.addProductItem(
             productId = productId,
             stockQuantity = request.stockQuantity.toMultipart(),
@@ -98,7 +97,6 @@ class ProductRepositoryImpl(
         }
         return Result.success(Unit)
     }
-
 
     override suspend fun updateProductItem(
         productId: String,

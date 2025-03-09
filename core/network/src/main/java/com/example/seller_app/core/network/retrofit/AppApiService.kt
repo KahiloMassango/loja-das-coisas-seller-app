@@ -77,7 +77,7 @@ interface AppApiService {
     ): Response<List<ProductDtoRes>>
 
     @Multipart
-    @PUT("stores/products/{id}/")
+    @PUT("stores/products/{id}")
     suspend fun updateProduct(
         @Path("id") id: String,
         @Part("name") name: RequestBody,

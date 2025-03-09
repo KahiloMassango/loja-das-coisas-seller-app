@@ -15,19 +15,28 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProductsViewModel @Inject constructor(
+internal class ProductsViewModel @Inject constructor(
     private val genderRepository: GenderRepository,
     private val categoryRepository: CategoryRepository,
     private val productRepository: ProductRepository
 ) : ViewModel() {
 
     private val _products = MutableStateFlow<List<Product>>(emptyList())
-    val products = _products.asStateFlow()
+    val products = _products
+        .onStart {
+            getProducts()
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000L),
+            emptyList()
+        )
 
     var isRefreshing by mutableStateOf(false)
 
@@ -54,13 +63,6 @@ class ProductsViewModel @Inject constructor(
         )
 
 
-    init {
-        getProducts(
-            gender = currentGender.value,
-            category = currentCategory.value
-        )
-    }
-
 
     fun updateCategory(category: String?) {
         viewModelScope.launch {
@@ -83,7 +85,7 @@ class ProductsViewModel @Inject constructor(
     }
 
 
-    private fun getProducts(gender: String?, category: String?) {
+    private fun getProducts(gender: String? = null, category: String? = null) {
         viewModelScope.launch {
             productRepository.filterProducts(gender = gender, category = category)
                 .onSuccess {

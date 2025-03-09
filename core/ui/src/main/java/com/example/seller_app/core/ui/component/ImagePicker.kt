@@ -92,7 +92,7 @@ fun ImagePicker(
             }
         } else {
             AsyncImage(
-                model = imageUri.replace("localhost", "10.0.2.2"),
+                model = imageUri,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(220.dp, 200.dp)

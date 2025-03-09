@@ -17,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,6 +59,8 @@ internal fun DetailContent(
     val focusManager = LocalFocusManager.current
     var isEditing by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+
+
 
     Scaffold(
         modifier = modifier,
@@ -168,11 +171,11 @@ internal fun DetailContent(
                     CustomButton(
                         text = "Salvar",
                         onClick = {
-                            if (uiState.productName.isNotEmpty() && uiState.description.isNotEmpty()) {
+                            if (uiState.productName.isNotBlank() && uiState.description.isNotBlank()) {
                                 isEditing = false
                                 onSaveUpdate()
                             } else {
-                                context.toastMessage("Preencha todos os campos")
+                                context.toastMessage("Verifique campos vazios")
                             }
                         }
                     )

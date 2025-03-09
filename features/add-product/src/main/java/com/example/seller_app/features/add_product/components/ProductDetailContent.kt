@@ -133,19 +133,19 @@ internal fun ProductDetailContent(
                 CustomButton(
                     text = "Salvar Produto",
                     onClick = onSaveProduct,
-                    enabled = true/*uiState.variations.isNotEmpty() &&
+                    enabled = uiState.productItems.isNotEmpty() &&
                             uiState.gender != null &&
                             uiState.category != null &&
                             uiState.productName.isNotBlank() &&
-                            uiState.image.isNotBlank()*/
+                            uiState.image.isNotBlank()
                 )
                 CustomButton(
                     text = "Variações",
                     onClick = {
-                        if (uiState.productName.isBlank() || uiState.gender == null || uiState.category == null) {
+                        if (uiState.category == null) {
                             Toast.makeText(
                                 context,
-                                "Por favor, preencha todos os campos",
+                                "Preencha todos os campos",
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {

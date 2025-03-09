@@ -2,6 +2,8 @@ package com.example.seller_app.core.network.retrofit
 
 import com.example.seller_app.core.network.model.response.GenderDtoRes
 import com.example.seller_app.core.network.model.Response
+import com.example.seller_app.core.network.model.response.order.OrderDetailDtoRes
+import com.example.seller_app.core.network.model.response.order.OrdersDtoRes
 import com.example.seller_app.core.network.model.response.product.CategoryDtoRes
 import com.example.seller_app.core.network.model.response.product.ColorDtoRes
 import com.example.seller_app.core.network.model.response.product.ProductDtoRes
@@ -13,6 +15,7 @@ import okhttp3.RequestBody
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
@@ -35,6 +38,18 @@ interface AppApiService {
 
     @GET("auth/logout")
     suspend fun logout()
+
+    // Orders
+    @GET("stores/orders")
+    suspend fun getOrder(): Response<OrdersDtoRes>
+
+    @GET("stores/orders/{id}")
+    suspend fun getOrderById(@Path("id") id: String): Response<OrderDetailDtoRes>
+
+    @PATCH("stores/orders/{id}/delivered")
+    suspend fun confirmDeliveredOrder(@Path("id") id: String)
+
+    // Products
 
     @GET("stores/products/{id}")
     suspend fun getProductById(@Path("id") id: String): Response<ProductWithVariationRes>
@@ -74,6 +89,8 @@ interface AppApiService {
     suspend fun deleteProduct(
         @Path("id") id: String,
     )
+
+    // Product Items
 
     @Multipart
     @POST("stores/products/{productId}/product-items")

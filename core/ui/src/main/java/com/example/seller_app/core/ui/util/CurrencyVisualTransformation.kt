@@ -83,3 +83,8 @@ fun formatCurrency(input: Int): String {
     // Append the currency symbol
     return "$formattedText Kz"
 }
+
+fun Int.toCurrency(): String {
+    val formattedText = NumberFormat.getNumberInstance(Locale("pt", "AO")).format(this)
+    return "$formattedText Kz"
+}

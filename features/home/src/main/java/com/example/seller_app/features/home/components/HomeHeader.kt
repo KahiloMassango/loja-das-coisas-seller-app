@@ -42,15 +42,15 @@ internal fun HomeHeader(
             ) {
                 HeaderInfoCard(
                     modifier = Modifier.weight(1f),
-                    description = "Encomendas Entregues",
-                    value = "$totalDeliveredOrders",
+                    description = "Encomendas Pendentes",
+                    value = "$totalPendingOrders",
+                    valueColor = MaterialTheme.colorScheme.primary,
                     icon = R.drawable.ic_basket,
                 )
                 HeaderInfoCard(
                     modifier = Modifier.weight(1f),
-                    description = "Encomendas Pendentes",
-                    value = "$totalPendingOrders",
-                    valueColor = MaterialTheme.colorScheme.primary,
+                    description = "Encomendas Entregues",
+                    value = "$totalDeliveredOrders",
                     icon = R.drawable.ic_basket,
                 )
             }

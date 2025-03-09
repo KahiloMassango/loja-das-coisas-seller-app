@@ -15,11 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.seller_app.core.model.order.Order
 import com.example.seller_app.core.ui.component.CustomOutlinedButton
+import com.example.seller_app.core.ui.util.toCurrency
 
 @Composable
 internal fun OrderCard(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    order: Order
 ) {
     Card(
         modifier = modifier
@@ -43,11 +46,11 @@ internal fun OrderCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Kahilo Pedro Massango",
+                    text = order.customerName,
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
-                    text = "15-06-2024",
+                    text = order.date,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.outlineVariant
@@ -59,11 +62,11 @@ internal fun OrderCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Itens: 3",
+                    text = "Itens: ${order.totalItems}",
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
-                    text = "Total: 18.600,00",
+                    text = "Total: " + order.total.toCurrency(),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.outlineVariant
@@ -79,10 +82,11 @@ internal fun OrderCard(
                     text = "Detalhes"
                 )
                 Text(
-                    text = "Pendente",
+                    text = if(order.isPending) "Pendente" else "Entregue",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.primary
+                    color = if(order.isPending) MaterialTheme.colorScheme.primary else
+                        MaterialTheme.colorScheme.scrim
                 )
             }
         }

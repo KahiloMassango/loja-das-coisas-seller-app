@@ -4,6 +4,7 @@ import com.example.seller_app.core.network.CategoryNetworkDataSource
 import com.example.seller_app.core.network.ColorNetworkDataSource
 import com.example.seller_app.core.network.GenderNetworkDataSource
 import com.example.seller_app.core.network.JwtNetworkDataSourceImpl
+import com.example.seller_app.core.network.OrderNetworkDataSourceImp
 import com.example.seller_app.core.network.datasources.ProductRemoteDataSource
 import com.example.seller_app.core.network.ProductNetworkDataSource
 import com.example.seller_app.core.network.SizeNetworkDataSource
@@ -12,6 +13,7 @@ import com.example.seller_app.core.network.datasources.CategoryRemoteDataSource
 import com.example.seller_app.core.network.datasources.ColorRemoteDataSource
 import com.example.seller_app.core.network.datasources.GenderRemoteDataSource
 import com.example.seller_app.core.network.datasources.JwtNetworkDatasource
+import com.example.seller_app.core.network.datasources.OrderNetworkDataSource
 import com.example.seller_app.core.network.datasources.SizeRemoteDataSource
 import com.example.seller_app.core.network.datasources.StoreNetworkDatasource
 import com.example.seller_app.core.network.retrofit.AppApiService
@@ -27,7 +29,12 @@ import dagger.hilt.components.SingletonComponent
 object DataSourcesModule {
 
     @Provides
-    fun providesJwtNetworkDatasource(
+    fun providesOrderNetworkDataSource(
+        appApiService: AppApiService
+    ): OrderNetworkDataSource = OrderNetworkDataSourceImp(appApiService)
+
+    @Provides
+    fun providesJwtNetworkDataSource(
         authApiService: AuthApiService
     ): JwtNetworkDatasource {
         return JwtNetworkDataSourceImpl(authApiService)
@@ -35,7 +42,7 @@ object DataSourcesModule {
     }
 
     @Provides
-    fun providesStoreNetworkDatasource(
+    fun providesStoreNetworkDataSource(
         authApiService: AuthApiService,
         appApiService: AppApiService
     ): StoreNetworkDatasource {

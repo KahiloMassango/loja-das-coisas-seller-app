@@ -6,7 +6,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,7 +35,7 @@ internal fun OrdersTab(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.Center
     ) {
         OrderStatus.entries.forEach { orderStatus ->
             OrderTabItem(
@@ -41,6 +43,7 @@ internal fun OrdersTab(
                 isSelected = currentTab == orderStatus,
                 onClick = { onSelectTab(orderStatus) }
             )
+            Spacer(Modifier.width(30.dp))
         }
     }
 }

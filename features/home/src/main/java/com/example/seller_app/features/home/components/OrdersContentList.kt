@@ -14,7 +14,8 @@ import com.example.seller_app.core.model.order.Order
 @Composable
 internal fun OrdersContentList(
     modifier: Modifier = Modifier,
-    orders: List<Order>
+    orders: List<Order>,
+    onDetails: (String) -> Unit
 ) {
     LazyColumn(
         modifier = modifier
@@ -24,7 +25,8 @@ internal fun OrdersContentList(
     ) {
         items(orders) { order ->
             OrderCard(
-                order = order
+                order = order,
+                onDetails = onDetails
             )
         }
     }

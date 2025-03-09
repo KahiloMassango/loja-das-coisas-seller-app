@@ -19,7 +19,7 @@ data class StoreOrders(
 
 data class OrderDetail(
     val id: String,
-    val storeName: String,
+    val customerName: String,
     val customerPhoneNumber: String,
     val date: String,
     val subTotal: Int,
@@ -28,6 +28,6 @@ data class OrderDetail(
     val deliveryAddressName: String,
     val paymentType: String,
     val deliveryMethod: String,
-    val status: String,
+    val delivered: Boolean,
     val orderItems: List<OrderItem>
 )

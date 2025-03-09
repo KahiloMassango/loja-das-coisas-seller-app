@@ -8,8 +8,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object HomeRoute
 
-fun NavGraphBuilder.homeScreen() {
+fun NavGraphBuilder.homeScreen(
+    onOrderDetail: (String) -> Unit
+) {
     composable<HomeRoute> {
-        HomeScreen()
+        HomeScreen(
+            onOrderDetail = onOrderDetail
+        )
     }
 }

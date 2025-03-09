@@ -22,7 +22,8 @@ import com.example.seller_app.core.ui.util.toCurrency
 @Composable
 internal fun OrderCard(
     modifier: Modifier = Modifier,
-    order: Order
+    order: Order,
+    onDetails: (String) -> Unit
 ) {
     Card(
         modifier = modifier
@@ -78,7 +79,7 @@ internal fun OrderCard(
                 verticalAlignment = Alignment.CenterVertically
             ){
                 CustomOutlinedButton(
-                    onClick = {},
+                    onClick = { onDetails(order.id) },
                     text = "Detalhes"
                 )
                 Text(

@@ -6,4 +6,5 @@ import com.example.seller_app.core.network.model.response.order.OrdersDtoRes
 interface OrderNetworkDataSource {
     suspend fun getOrders(): Result<OrdersDtoRes>
     suspend fun getOrderById(id: String): Result<OrderDetailDtoRes>
+    suspend fun confirmDeliveredOrder(orderId: String): Result<Unit>
 }

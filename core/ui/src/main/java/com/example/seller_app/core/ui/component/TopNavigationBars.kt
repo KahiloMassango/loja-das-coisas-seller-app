@@ -64,7 +64,7 @@ fun CenteredTopBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LargeTopBar(
+fun MediumTopBar(
     modifier: Modifier = Modifier,
     title: String,
     canNavigateBack: Boolean = true,
@@ -102,7 +102,7 @@ fun LargeTopBar(
 @Composable
 private fun TopBarPreview() {
     SellerappTheme() {
-        LargeTopBar(
+        MediumTopBar(
             title = "Title",
             onNavigateUp = {}
         )

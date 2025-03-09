@@ -28,6 +28,20 @@ class OrderNetworkDataSourceImp(
         }
     }
 
+    override suspend fun confirmDeliveredOrder(orderId: String): Result<Unit> {
+        return withContext(Dispatchers.IO) {
+            try {
+                appApiService.confirmDeliveredOrder(orderId)
+                Result.success(Unit)
+            } catch (e: HttpException) {
+                val message = extractErrorMessage(e)
+                Result.failure(Exception(message))
+            } catch (e: IOException) {
+                Result.failure(IOException("Verifique sua conexão de internet"))
+            }
+        }
+    }
+
     override suspend fun getOrderById(id: String): Result<OrderDetailDtoRes> {
         return withContext(Dispatchers.IO) {
             try {

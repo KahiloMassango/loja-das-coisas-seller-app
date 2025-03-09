@@ -23,6 +23,7 @@
             <option value="$PROJECT_DIR$/features/authentication" />
             <option value="$PROJECT_DIR$/features/finances" />
             <option value="$PROJECT_DIR$/features/home" />
+            <option value="$PROJECT_DIR$/features/order-detail" />
             <option value="$PROJECT_DIR$/features/product-detail" />
             <option value="$PROJECT_DIR$/features/product-items" />
             <option value="$PROJECT_DIR$/features/products" />

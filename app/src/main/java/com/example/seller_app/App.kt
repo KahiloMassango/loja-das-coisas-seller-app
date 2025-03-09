@@ -14,6 +14,9 @@ import com.example.seller_app.features.authentication.login.navigation.loginScre
 import com.example.seller_app.features.finances.navigation.financeScreen
 import com.example.seller_app.features.home.navigation.HomeRoute
 import com.example.seller_app.features.home.navigation.homeScreen
+import com.example.seller_app.features.order_detail.navigation.OrderDetailRoute
+import com.example.seller_app.features.order_detail.navigation.navigateToOrderDetail
+import com.example.seller_app.features.order_detail.navigation.orderDetailScreen
 import com.example.seller_app.features.product_detail.navigation.navigateToProductDetail
 import com.example.seller_app.features.product_detail.navigation.productDetailScreen
 import com.example.seller_app.features.products.navigation.productsScreen
@@ -42,19 +45,31 @@ fun App(
                 onSignUp = {},
                 onForgotPassword = {}
             )
-            homeScreen()
+
+            homeScreen(
+                onOrderDetail = { id -> navController.navigateToOrderDetail(id) }
+            )
+
+            orderDetailScreen(
+                onNavigateUp = navController::navigateUp
+            )
+
             addProductScreen(
                 onNavigateUp = navController::navigateUp
             )
+
             productDetailScreen(
                 onNavigateUp = navController::navigateUp,
                 onVariationsClick = { navController.navigateToProductItems(it) }
             )
+
             productsScreen(
                 onAddNewProduct = { navController.navigateToAddProduct() },
                 onProductClick = { id -> navController.navigateToProductDetail(id) }
             )
+
             productItemsScreen(onNavigateUp = navController::navigateUp)
+
             financeScreen()
         }
         AppNavigationBar(

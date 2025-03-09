@@ -17,4 +17,8 @@ class OrderRepositoryImpl(
     override suspend fun getOrderById(id: String): Result<OrderDetail> {
         return networkDataSource.getOrderById(id).mapCatching { it.asExternalModel() }
     }
+
+    override suspend fun confirmDeliveredOrder(orderId: String): Result<Unit> {
+        return networkDataSource.confirmDeliveredOrder(orderId)
+    }
 }

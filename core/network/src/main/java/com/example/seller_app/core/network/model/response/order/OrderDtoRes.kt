@@ -3,7 +3,6 @@ package com.example.seller_app.core.network.model.response.order
 import com.example.seller_app.core.model.order.Order
 import com.example.seller_app.core.model.order.OrderDetail
 import com.example.seller_app.core.model.order.StoreOrders
-import java.util.UUID
 
 data class OrderDtoRes(
     val id: String,
@@ -48,13 +47,13 @@ data class OrderDetailDtoRes(
     val deliveryAddressName: String,
     val paymentType: String,
     val deliveryMethod: String,
-    val status: String,
+    val delivered: Boolean,
     val orderItems: List<OrderItemDtoRes>
 )
 
 fun OrderDetailDtoRes.asExternalModel() = OrderDetail(
     id = id,
-    storeName = customerName,
+    customerName = customerName,
     customerPhoneNumber = customerPhoneNumber,
     date = date,
     subTotal = subTotal,
@@ -63,6 +62,6 @@ fun OrderDetailDtoRes.asExternalModel() = OrderDetail(
     deliveryAddressName = deliveryAddressName,
     paymentType = paymentType,
     deliveryMethod = deliveryMethod,
-    status = status,
+    delivered = delivered,
     orderItems = orderItems.map(OrderItemDtoRes::asExternalModel)
 )

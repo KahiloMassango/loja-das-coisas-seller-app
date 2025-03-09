@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.seller_app.core.model.OrderStatus
 import com.example.seller_app.core.model.order.Order
 import com.example.seller_app.core.ui.component.CenteredTopBar
@@ -37,9 +38,10 @@ import com.example.seller_app.features.home.model.HomeUiState
 @Composable
 internal fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    onOrderDetail: (String) -> Unit
 ) {
-    val uiState = viewModel.uiState.collectAsState().value
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
     when (uiState) {
         is HomeUiState.Loading -> LoadingScreen()
@@ -49,7 +51,8 @@ internal fun HomeScreen(
             totalPendingOrders = uiState.totalPendingOrders,
             totalDeliveredOrders = uiState.totalDeliveredOrders,
             pendingOrders = uiState.pendingOrders,
-            deliveredOrders = uiState.deliveredOrders
+            deliveredOrders = uiState.deliveredOrders,
+            onOrderDetail = { id -> onOrderDetail(id)}
         )
     }
 }
@@ -61,7 +64,8 @@ private fun HomeScreenContent(
     totalPendingOrders: Int,
     totalDeliveredOrders: Int,
     pendingOrders: List<Order>,
-    deliveredOrders: List<Order>
+    deliveredOrders: List<Order>,
+    onOrderDetail: (String) -> Unit
 ) {
     var currentTab by remember { mutableStateOf(OrderStatus.PENDING) }
     Scaffold(
@@ -101,8 +105,14 @@ private fun HomeScreenContent(
                 modifier = Modifier.fillMaxWidth(),
             ) { state ->
                 when (state) {
-                    OrderStatus.PENDING -> OrdersContentList(orders = pendingOrders)
-                    OrderStatus.DELIVERED -> OrdersContentList(orders = deliveredOrders)
+                    OrderStatus.PENDING -> OrdersContentList(
+                        orders = pendingOrders,
+                        onDetails = { id -> onOrderDetail(id) }
+                    )
+                    OrderStatus.DELIVERED -> OrdersContentList(
+                        orders = deliveredOrders,
+                        onDetails = { id -> onOrderDetail(id) }
+                    )
                 }
             }
         }
@@ -114,6 +124,8 @@ private fun HomeScreenContent(
 @Composable
 private fun Preview() {
     SellerappTheme {
-        HomeScreen()
+        HomeScreen(
+            onOrderDetail = {}
+        )
     }
 }

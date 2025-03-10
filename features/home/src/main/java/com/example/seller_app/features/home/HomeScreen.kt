@@ -74,7 +74,7 @@ private fun HomeScreenContent(
         modifier = modifier,
         topBar = {
             CenteredTopBar(
-                title = "Store Name",
+                title = "Encomendas",
                 canNavigateBack = false,
                 action = {
                     IconButton(

@@ -7,6 +7,7 @@ import com.example.datastore.datasource.JwtLocalDataSource
 import com.example.seller_app.core.data.AccountRepositoryImpl
 import com.example.seller_app.core.data.CategoryRepositoryImpl
 import com.example.seller_app.core.data.ColorRepositoryImpl
+import com.example.seller_app.core.data.FinanceRepositoryImpl
 import com.example.seller_app.core.data.GenderRepositoryImpl
 import com.example.seller_app.core.data.OrderRepositoryImpl
 import com.example.seller_app.core.data.PreferenceRepositoryImpl
@@ -16,6 +17,7 @@ import com.example.seller_app.core.data.SyncManager
 import com.example.seller_app.core.data.repositories.AccountRepository
 import com.example.seller_app.core.data.repositories.CategoryRepository
 import com.example.seller_app.core.data.repositories.ColorRepository
+import com.example.seller_app.core.data.repositories.FinanceRepository
 import com.example.seller_app.core.data.repositories.GenderRepository
 import com.example.seller_app.core.data.repositories.OrderRepository
 import com.example.seller_app.core.data.repositories.PreferenceRepository
@@ -27,6 +29,7 @@ import com.example.seller_app.core.database.datasources.GenderLocalDataSource
 import com.example.seller_app.core.database.datasources.SizeLocalDataSource
 import com.example.seller_app.core.network.datasources.CategoryRemoteDataSource
 import com.example.seller_app.core.network.datasources.ColorRemoteDataSource
+import com.example.seller_app.core.network.datasources.FinanceDataSource
 import com.example.seller_app.core.network.datasources.GenderRemoteDataSource
 import com.example.seller_app.core.network.datasources.OrderNetworkDataSource
 import com.example.seller_app.core.network.datasources.ProductRemoteDataSource
@@ -42,6 +45,11 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
+
+    @Provides
+    fun providesFinanceRepository(
+        financeDataSource: FinanceDataSource
+    ): FinanceRepository = FinanceRepositoryImpl(financeDataSource)
 
     @Provides
     fun providesSyncManager(

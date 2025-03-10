@@ -21,15 +21,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.seller_app.core.ui.util.toCurrency
 
 
 @Composable
 internal fun BalanceCard(
     modifier: Modifier = Modifier,
+    balance: Int,
     onWithdraw: () -> Unit
 ) {
     Card(
-        modifier = Modifier,
+        modifier = modifier,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
@@ -47,11 +49,11 @@ internal fun BalanceCard(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "Saldo Atual",
+                    text = "Balanço",
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = "28.643,00 Kz",
+                    text = balance.toCurrency(),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )

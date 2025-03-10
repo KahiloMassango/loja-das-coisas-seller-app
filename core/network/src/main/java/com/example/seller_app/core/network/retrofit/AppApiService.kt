@@ -2,6 +2,7 @@ package com.example.seller_app.core.network.retrofit
 
 import com.example.seller_app.core.network.model.response.GenderDtoRes
 import com.example.seller_app.core.network.model.Response
+import com.example.seller_app.core.network.model.response.FinanceStatusDtoRes
 import com.example.seller_app.core.network.model.response.order.OrderDetailDtoRes
 import com.example.seller_app.core.network.model.response.order.OrdersDtoRes
 import com.example.seller_app.core.network.model.response.product.CategoryDtoRes
@@ -120,4 +121,10 @@ interface AppApiService {
         @Path("productItemId") productItemId: String
     )
 
+    // Finance
+    @GET("stores/finances")
+    suspend fun getFinanceStatus(): Response<FinanceStatusDtoRes>
+
+    @GET("stores/finances/request-withdraw")
+    suspend fun requestWithdraw()
 }

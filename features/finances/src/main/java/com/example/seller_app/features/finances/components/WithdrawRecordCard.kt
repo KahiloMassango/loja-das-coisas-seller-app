@@ -14,11 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.seller_app.core.model.WithdrawRecord
+import com.example.seller_app.core.ui.util.toCurrency
 
 
 @Composable
-fun WithdrawCard(
-    modifier: Modifier = Modifier
+fun WithdrawRecordCard(
+    modifier: Modifier = Modifier,
+    record: WithdrawRecord
 ) {
     Card(
         modifier = modifier,
@@ -40,11 +43,11 @@ fun WithdrawCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Montante: 20,810,85 kz",
+                    text = "Montante: ${record.amount.toCurrency()}",
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "15/06/2024 às 12:42",
+                    text = record.requestDate,
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -54,13 +57,13 @@ fun WithdrawCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Taxa: 5% (2.210,00 Kz)",
+                    text = "Taxa: ${record.feeAmount.toCurrency()} (${record.fee})",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "Total retirado: 18.600,85 Kz",
+                text = "Total retirado: ${record.total.toCurrency()}",
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold
             )

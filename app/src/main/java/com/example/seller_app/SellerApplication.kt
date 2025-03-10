@@ -63,7 +63,7 @@ class CompositeWorkerFactory @Inject constructor(
             SizeSyncWorker::class.java.name ->
                 sizesWorkerFactory.createWorker(appContext, workerClassName, workerParameters)
 
-            GenderWorkerFactory::class.java.name -> genderWorkerFactory.createWorker(
+            GenderSyncWorker::class.java.name -> genderWorkerFactory.createWorker(
                 appContext,
                 workerClassName,
                 workerParameters

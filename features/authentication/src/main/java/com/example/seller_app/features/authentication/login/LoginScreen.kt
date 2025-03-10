@@ -131,8 +131,8 @@ internal fun LoginScreen(
 
                 Text(
                     modifier = Modifier
-                        .clickable { onForgotPassword() }
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clickable { onForgotPassword() },
                     text = "Esqueceu a senha?",
                     style = MaterialTheme.typography.labelMedium,
                     textAlign = TextAlign.Right

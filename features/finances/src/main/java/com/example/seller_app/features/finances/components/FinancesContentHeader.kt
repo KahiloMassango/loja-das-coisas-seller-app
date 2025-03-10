@@ -19,10 +19,11 @@ import com.example.seller_app.features.finances.model.WithdrawStatus
 @Composable
 internal fun FinancesContentHeader(
     modifier: Modifier = Modifier,
+    balance: Int,
+    currentTab: String,
+    onWithdraw: () -> Unit,
     onTabChange: (String) -> Unit,
 ) {
-    var currentTab by rememberSaveable { mutableStateOf(WithdrawStatus.PENDING.description) }
-
     Surface(
         modifier = modifier,
         shadowElevation = 4.dp,
@@ -34,14 +35,15 @@ internal fun FinancesContentHeader(
         ) {
             Spacer(Modifier.height(8.dp))
             BalanceCard(
-                onWithdraw = {  }
+                balance = balance,
+                onWithdraw = onWithdraw
             )
             Spacer(Modifier.height(26.dp))
             AppTabRow(
                 modifier = Modifier.fillMaxWidth(),
                 currentTab = currentTab,
                 tabs = WithdrawStatus.entries.map { it.description },
-                onSelectTab = { currentTab = it }
+                onSelectTab = { onTabChange(it) }
             )
             Spacer(Modifier.height(20.dp))
         }

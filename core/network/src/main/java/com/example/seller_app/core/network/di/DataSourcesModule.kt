@@ -2,6 +2,7 @@ package com.example.seller_app.core.network.di
 
 import com.example.seller_app.core.network.CategoryNetworkDataSource
 import com.example.seller_app.core.network.ColorNetworkDataSource
+import com.example.seller_app.core.network.FinanceDataSourceImpl
 import com.example.seller_app.core.network.GenderNetworkDataSource
 import com.example.seller_app.core.network.JwtNetworkDataSourceImpl
 import com.example.seller_app.core.network.OrderNetworkDataSourceImp
@@ -11,6 +12,7 @@ import com.example.seller_app.core.network.SizeNetworkDataSource
 import com.example.seller_app.core.network.StoreNetworkDataSourceImpl
 import com.example.seller_app.core.network.datasources.CategoryRemoteDataSource
 import com.example.seller_app.core.network.datasources.ColorRemoteDataSource
+import com.example.seller_app.core.network.datasources.FinanceDataSource
 import com.example.seller_app.core.network.datasources.GenderRemoteDataSource
 import com.example.seller_app.core.network.datasources.JwtNetworkDatasource
 import com.example.seller_app.core.network.datasources.OrderNetworkDataSource
@@ -27,6 +29,11 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 object DataSourcesModule {
+
+    @Provides
+    fun providesFinanceDataSource(
+        appApiService: AppApiService
+    ): FinanceDataSource = FinanceDataSourceImpl(appApiService)
 
     @Provides
     fun providesOrderNetworkDataSource(

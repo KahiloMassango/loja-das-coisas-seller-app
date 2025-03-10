@@ -91,8 +91,6 @@ internal class AddProductViewModel @Inject constructor(
 
     fun updateGender(gender: Gender) {
         _uiState.update { it.copy(gender = gender) }
-        // Clear variation list
-        _uiState.update { it.copy(productItems = emptyList()) }
     }
 
     fun updateCategory(category: Category) {

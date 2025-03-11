@@ -47,8 +47,6 @@ import com.example.seller_app.core.ui.theme.SellerappTheme
 internal fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
-    onLogin: () -> Unit,
-    onSignUp: () -> Unit,
     onForgotPassword: () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
@@ -56,12 +54,6 @@ internal fun LoginScreen(
     var password by remember { mutableStateOf("store@example.com") }
 
     val snackbarHostState = SnackbarHostState()
-
-    LaunchedEffect(viewModel.isLoggedIn) {
-        if (viewModel.isLoggedIn) {
-         //   onLogin()
-        }
-    }
 
     viewModel.message?.let { msg ->
         LaunchedEffect(msg) {
@@ -175,9 +167,7 @@ internal fun LoginScreen(
 private fun Preview() {
     SellerappTheme {
         LoginScreen(
-            onSignUp = {},
             onForgotPassword = {},
-            onLogin = {}
         )
     }
 }

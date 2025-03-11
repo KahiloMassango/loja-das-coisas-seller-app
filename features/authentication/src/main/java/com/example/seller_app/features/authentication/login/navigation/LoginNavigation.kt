@@ -10,15 +10,11 @@ import kotlinx.serialization.Serializable
 data object LoginRoute
 
 fun NavGraphBuilder.loginScreen(
-    onLogin: () -> Unit,
-    onSignUp: () -> Unit,
     onForgotPassword: () -> Unit,
 ) {
     composable<LoginRoute> {
         LoginScreen(
-            onSignUp = onSignUp,
             onForgotPassword = onForgotPassword,
-            onLogin = onLogin
         )
     }
 }

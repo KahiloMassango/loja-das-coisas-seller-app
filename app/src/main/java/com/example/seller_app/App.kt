@@ -40,8 +40,6 @@ fun App(
             startDestination = startDestination
         ) {
             loginScreen(
-                onLogin = {},
-                onSignUp = {},
                 onForgotPassword = {}
             )
 

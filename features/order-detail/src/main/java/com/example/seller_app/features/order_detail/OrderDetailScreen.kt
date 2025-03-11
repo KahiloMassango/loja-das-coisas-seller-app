@@ -14,15 +14,18 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.seller_app.core.model.order.OrderDetail
+import com.example.seller_app.core.model.order.OrderItem
+import com.example.seller_app.core.ui.PhonePreviews
 import com.example.seller_app.core.ui.component.CenteredTopBar
 import com.example.seller_app.core.ui.component.CustomButton
+import com.example.seller_app.core.ui.theme.SellerappTheme
 import com.example.seller_app.core.ui.util.toCurrency
 import com.example.seller_app.features.order_detail.components.ErrorScreen
 import com.example.seller_app.features.order_detail.components.LoadingScreen
@@ -30,6 +33,7 @@ import com.example.seller_app.features.order_detail.components.OrderInformation
 import com.example.seller_app.features.order_detail.components.OrderItemCard
 import com.example.seller_app.features.order_detail.components.OrderSummary
 import com.example.seller_app.features.order_detail.model.OrderDetailUiState
+import com.example.seller_app.features.order_detail.util.mockOrderDetail
 
 @Composable
 internal fun OrderDetailScreen(
@@ -46,12 +50,13 @@ internal fun OrderDetailScreen(
             retry = viewModel::loadOrder,
             message = uiState.message
         )
+
         is OrderDetailUiState.Loading -> LoadingScreen()
         is OrderDetailUiState.Success -> {
             OrderDetailContent(
                 modifier = modifier,
                 message = message,
-                order = uiState.order,
+                orderDetail = uiState.order,
                 onConfirmDelivery = viewModel::confirmDelivery,
                 messageShown = viewModel::messageShown,
                 onNavigateUp = onNavigateUp
@@ -66,7 +71,7 @@ internal fun OrderDetailScreen(
 internal fun OrderDetailContent(
     modifier: Modifier = Modifier,
     message: String?,
-    order: OrderDetail,
+    orderDetail: OrderDetail,
     onConfirmDelivery: () -> Unit,
     messageShown: () -> Unit,
     onNavigateUp: () -> Unit,
@@ -84,7 +89,7 @@ internal fun OrderDetailContent(
     Scaffold(
         modifier = modifier,
         snackbarHost = {
-            SnackbarHost(snackbarHostState){
+            SnackbarHost(snackbarHostState) {
                 Snackbar(
                     snackbarData = it,
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -101,53 +106,66 @@ internal fun OrderDetailContent(
             )
         }
     ) { contentPadding ->
-        Surface(
-            modifier = Modifier.padding(contentPadding)
+
+        LazyColumn(
+            modifier = Modifier
+                .padding(contentPadding)
+                .fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(18.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+            item {
+                OrderInformation(
+                    customerName = orderDetail.customerName,
+                    date = orderDetail.date,
+                    customerPhoneNumber = orderDetail.customerPhoneNumber,
+                    delivered = orderDetail.delivered
+                )
+            }
+
+            items(orderDetail.orderItems) { orderItem ->
+                OrderItemCard(
+                    orderItem = orderItem
+                )
+            }
+
+            item {
+                OrderSummary(
+                    modifier = Modifier.padding(top = 8.dp),
+                    deliveryAddress = orderDetail.deliveryAddressName,
+                    paymentType = orderDetail.paymentType,
+                    deliveryMethod = orderDetail.deliveryMethod,
+                    total = orderDetail.total.toCurrency(),
+                )
+            }
+
+            if (!orderDetail.delivered) {
                 item {
-                    OrderInformation(
-                        modifier = Modifier.padding(bottom = 12.dp),
-                        customerName = order.customerName,
-                        date = order.date,
-                        customerPhoneNumber = order.customerPhoneNumber,
-                        delivered = order.delivered
+                    CustomButton(
+                        modifier = Modifier.padding(top = 14.dp),
+                        onClick = onConfirmDelivery,
+                        text = "Confirmar entrega",
                     )
-                }
-
-                items(order.orderItems) { orderItem ->
-                    OrderItemCard(
-                        orderItem = orderItem
-                    )
-                }
-
-                item {
-                    OrderSummary(
-                        modifier = Modifier.padding(top = 12.dp),
-                        deliveryAddress = order.deliveryAddressName,
-                        paymentType = order.paymentType,
-                        deliveryMethod = order.deliveryMethod,
-                        total = order.total.toCurrency(),
-                    )
-                }
-
-                if(!order.delivered){
-                    item {
-                        CustomButton(
-                            modifier = Modifier.padding(top = 14.dp),
-                            onClick = onConfirmDelivery,
-                            text = "Confirmar entrega",
-                        )
-                    }
                 }
             }
         }
     }
 }
 
+@PhonePreviews
+@Composable
+private fun Preview() {
+
+
+    SellerappTheme {
+        OrderDetailContent(
+            message = null,
+            orderDetail = mockOrderDetail,
+            onConfirmDelivery = {},
+            messageShown = {},
+            onNavigateUp = {},
+        )
+    }
+}
 

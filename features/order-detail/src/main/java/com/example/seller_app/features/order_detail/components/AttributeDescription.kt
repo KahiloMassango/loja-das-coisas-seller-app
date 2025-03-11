@@ -8,6 +8,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.sp
 
 @Composable
 internal fun AttributeDescription(
@@ -20,7 +21,7 @@ internal fun AttributeDescription(
             style = SpanStyle(
                 color = MaterialTheme.colorScheme.inverseOnSurface,
                 fontWeight = FontWeight.Light,
-                fontSize = MaterialTheme.typography.labelSmall.fontSize
+                fontSize = MaterialTheme.typography.bodySmall.fontSize
             )
         ) {
             append("$attribute: ")
@@ -29,7 +30,7 @@ internal fun AttributeDescription(
             style = SpanStyle(
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Light,
-                fontSize = MaterialTheme.typography.labelSmall.fontSize
+                fontSize = MaterialTheme.typography.bodySmall.fontSize
             )
         ) {
             append(value)

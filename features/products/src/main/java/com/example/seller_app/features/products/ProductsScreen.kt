@@ -1,5 +1,6 @@
 package com.example.seller_app.features.products
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -36,6 +37,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -44,9 +48,14 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.seller_app.core.model.product.Product
+import com.example.seller_app.core.ui.PhonePreviews
 import com.example.seller_app.core.ui.component.CenteredTopBar
 import com.example.seller_app.core.ui.component.ProductCard
+import com.example.seller_app.core.ui.theme.SellerappTheme
 import com.example.seller_app.features.products.components.Header
+import com.example.seller_app.features.products.util.sampleCategories
+import com.example.seller_app.features.products.util.sampleGenders
+import com.example.seller_app.features.products.util.sampleProducts
 
 
 @Composable
@@ -190,13 +199,14 @@ internal fun ProductsContent(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth(),
-                    columns = GridCells.Adaptive(164.dp),
+                    columns = GridCells.Adaptive(150.dp),
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(22.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(products) { product ->
                         ProductCard(
+                            modifier = Modifier,
                             product = product,
                             onClick = { id -> onProductClick(id) }
                         )
@@ -205,5 +215,29 @@ internal fun ProductsContent(
             }
 
         }
+    }
+}
+
+
+@PhonePreviews
+//@PreviewScreenSizes
+@Composable
+private fun Preview(modifier: Modifier = Modifier) {
+    SellerappTheme {
+        ProductsContent(
+            message = "Sample message",
+            isRefreshing = false,
+            onMessageShown = {},
+            products = sampleProducts,
+            genders = sampleGenders,
+            onRefresh = {},
+            categories = sampleCategories,
+            selectedGender = "Unisex",
+            selectedCategory = "Clothes",
+            updateGender = {},
+            updateCategory = {},
+            onAddNewProduct = {},
+            onProductClick = {}
+        )
     }
 }

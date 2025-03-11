@@ -1,10 +1,13 @@
 package com.example.seller_app.core.ui.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,18 +30,20 @@ fun ProductCard(
 ) {
     Card(
         modifier = modifier
-            .width(164.dp),
+            .widthIn(min = 140.dp, max = 180.dp),
         onClick = { onClick(product.id) },
         shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         )
     ) {
-        Column{
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ){
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(184.dp)
+                    .aspectRatio(1f)
                     .clip(RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)),
                 model = product.imageUrl,
                 contentDescription = null,
@@ -46,7 +51,7 @@ fun ProductCard(
             )
 
             Text(
-                modifier = Modifier.padding(top = 4.dp),
+                modifier = Modifier,
                 text = product.name,
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleSmall,
@@ -55,7 +60,7 @@ fun ProductCard(
             Text(
                 text = "49.99 kz",
                 color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.SemiBold
             )
         }

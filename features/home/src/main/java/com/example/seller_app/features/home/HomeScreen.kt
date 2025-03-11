@@ -15,7 +15,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +28,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.seller_app.core.model.OrderStatus
 import com.example.seller_app.core.model.order.Order
@@ -37,16 +46,34 @@ import com.example.seller_app.features.home.model.HomeUiState
 @Composable
 internal fun HomeScreen(
     modifier: Modifier = Modifier,
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     viewModel: HomeViewModel = hiltViewModel(),
     onOrderDetail: (String) -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val message = viewModel.message
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.loadOrders()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     when (uiState) {
         is HomeUiState.Loading -> LoadingScreen()
-        is HomeUiState.Error -> ErrorScreen(uiState.message, retry = {})
+        is HomeUiState.Error -> ErrorScreen(
+            message = message,
+            onMessageShown = viewModel::messageShown,
+            retry = viewModel::tryAgain
+        )
         is HomeUiState.Success -> HomeScreenContent(
             modifier = modifier,
+            message = message,
+            onMessageShown = viewModel::messageShown,
             totalPendingOrders = uiState.totalPendingOrders,
             totalDeliveredOrders = uiState.totalDeliveredOrders,
             pendingOrders = uiState.pendingOrders,
@@ -60,6 +87,8 @@ internal fun HomeScreen(
 @Composable
 private fun HomeScreenContent(
     modifier: Modifier,
+    message: String?,
+    onMessageShown: () -> Unit,
     totalPendingOrders: Int,
     totalDeliveredOrders: Int,
     pendingOrders: List<Order>,
@@ -67,8 +96,26 @@ private fun HomeScreenContent(
     onOrderDetail: (String) -> Unit
 ) {
     var currentTab by remember { mutableStateOf(OrderStatus.PENDING) }
+    val snackbarHostState = SnackbarHostState()
+
+    message?.let {
+        LaunchedEffect(message) {
+            snackbarHostState.showSnackbar(message)
+            onMessageShown()
+        }
+    }
+
     Scaffold(
         modifier = modifier,
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) {
+                Snackbar(
+                    snackbarData = it,
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                )
+            }
+        },
         topBar = {
             CenteredTopBar(
                 title = "Encomendas",

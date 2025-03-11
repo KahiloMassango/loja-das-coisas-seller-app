@@ -1,6 +1,5 @@
 package com.example.seller_app.features.products
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,13 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.seller_app.core.data.repositories.CategoryRepository
 import com.example.seller_app.core.data.repositories.GenderRepository
 import com.example.seller_app.core.data.repositories.ProductRepository
+import com.example.seller_app.core.data.util.NetworkMonitor
 import com.example.seller_app.core.model.product.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,19 +23,15 @@ import javax.inject.Inject
 internal class ProductsViewModel @Inject constructor(
     private val genderRepository: GenderRepository,
     private val categoryRepository: CategoryRepository,
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
+    private val networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
     private val _products = MutableStateFlow<List<Product>>(emptyList())
-    val products = _products
-        .onStart {
-            getProducts()
-        }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5_000L),
-            emptyList()
-        )
+    val products = _products.asStateFlow()
+
+    var message: String? by mutableStateOf(null)
+        private set
 
     var isRefreshing by mutableStateOf(false)
 
@@ -63,7 +58,6 @@ internal class ProductsViewModel @Inject constructor(
         )
 
 
-
     fun updateCategory(category: String?) {
         viewModelScope.launch {
             currentCategory.value = category
@@ -85,18 +79,26 @@ internal class ProductsViewModel @Inject constructor(
     }
 
 
-    private fun getProducts(gender: String? = null, category: String? = null) {
+    fun getProducts(gender: String? = null, category: String? = null) {
+        if (!networkMonitor.hasNetworkConnection()) {
+            message = "Sem conexão com a internet"
+            return
+        }
         viewModelScope.launch {
             productRepository.filterProducts(gender = gender, category = category)
                 .onSuccess {
                     _products.value = it
-                }.onFailure {
-                    Log.d("getProducts error", it.message!!)
+                }.onFailure { error ->
+                    message = error.message ?: "Algo deu errado"
                 }
         }
     }
 
     fun refresh() {
+        if (!networkMonitor.hasNetworkConnection()) {
+            message = "Sem conexão com a internet"
+            return
+        }
         viewModelScope.launch {
             isRefreshing = true
             productRepository.filterProducts(
@@ -105,11 +107,14 @@ internal class ProductsViewModel @Inject constructor(
             ).onSuccess {
                 _products.value = it
                 isRefreshing = false
-            }.onFailure {
+            }.onFailure { error ->
                 isRefreshing = false
-                Log.d("refresh error", it.message!!)
+                message = error.message ?: "Algo deu errado"
             }
         }
     }
 
+    fun messageShown() {
+        message = null
+    }
 }

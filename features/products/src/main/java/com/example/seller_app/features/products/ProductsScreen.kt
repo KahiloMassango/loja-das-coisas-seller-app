@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Notifications
@@ -23,15 +25,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.seller_app.core.model.product.Product
 import com.example.seller_app.core.ui.component.CenteredTopBar
@@ -43,6 +53,7 @@ import com.example.seller_app.features.products.components.Header
 internal fun ProductsScreen(
     modifier: Modifier = Modifier,
     viewModel: ProductsViewModel = hiltViewModel(),
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     onAddNewProduct: () -> Unit,
     onProductClick: (String) -> Unit
 ) {
@@ -52,6 +63,17 @@ internal fun ProductsScreen(
     val selectedGender by viewModel.currentGender.collectAsState()
     val selectedSubCategory by viewModel.currentCategory.collectAsState()
     val isRefreshing = viewModel.isRefreshing
+    val message = viewModel.message
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.getProducts()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     ProductsContent(
         modifier = modifier,
@@ -59,6 +81,8 @@ internal fun ProductsScreen(
         products = products,
         genders = genders,
         categories = categories,
+        message = message,
+        onMessageShown = viewModel::messageShown,
         onRefresh = viewModel::refresh,
         onAddNewProduct = onAddNewProduct,
         onProductClick = onProductClick,
@@ -74,7 +98,9 @@ internal fun ProductsScreen(
 @Composable
 internal fun ProductsContent(
     modifier: Modifier = Modifier,
+    message: String?,
     isRefreshing: Boolean,
+    onMessageShown: () -> Unit,
     products: List<Product>,
     genders: List<String>,
     onRefresh: () -> Unit,
@@ -87,9 +113,27 @@ internal fun ProductsContent(
     onProductClick: (String) -> Unit
 ) {
 
+    val snackbarHostState = SnackbarHostState()
+
+    message?.let {
+        LaunchedEffect(message) {
+            snackbarHostState.showSnackbar(message)
+            onMessageShown()
+        }
+    }
+
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) {
+                Snackbar(
+                    snackbarData = it,
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                )
+            }
+        },
         topBar = {
             CenteredTopBar(
                 title = "Produtos",
@@ -122,26 +166,29 @@ internal fun ProductsContent(
         contentWindowInsets = WindowInsets.systemBars.exclude(BottomAppBarDefaults.windowInsets)
     ) { paddingValues ->
         val state = rememberPullToRefreshState()
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
+            state = state,
         ) {
-            Header(
-                selectedGender = selectedGender,
-                selectedCategory = selectedCategory,
-                genders = genders,
-                categories = categories,
-                onSelectCategory = updateCategory,
-                onSelectGender = updateGender
-            )
-            PullToRefreshBox(
-                isRefreshing = isRefreshing,
-                onRefresh = onRefresh,
-                state = state,
+            Column(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
             ) {
+                Header(
+                    selectedGender = selectedGender,
+                    selectedCategory = selectedCategory,
+                    genders = genders,
+                    categories = categories,
+                    onSelectCategory = updateCategory,
+                    onSelectGender = updateGender
+                )
+
                 LazyVerticalGrid(
                     modifier = Modifier
+                        .weight(1f)
                         .fillMaxWidth(),
                     columns = GridCells.Adaptive(164.dp),
                     contentPadding = PaddingValues(16.dp),

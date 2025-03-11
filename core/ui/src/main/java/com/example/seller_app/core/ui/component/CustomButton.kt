@@ -47,7 +47,7 @@ fun CustomOutlinedButton(
         modifier = modifier,
         onClick = onClick,
         enabled = enabled,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+        //border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         colors = ButtonDefaults.outlinedButtonColors(
             contentColor = MaterialTheme.colorScheme.onSecondaryContainer
         )

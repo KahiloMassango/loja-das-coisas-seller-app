@@ -1,13 +1,19 @@
 package com.example.seller_app.features.home
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.BottomAppBarDefaults
@@ -27,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -40,7 +47,7 @@ import com.example.seller_app.core.ui.theme.SellerappTheme
 import com.example.seller_app.features.home.components.ErrorScreen
 import com.example.seller_app.features.home.components.HomeHeader
 import com.example.seller_app.features.home.components.LoadingScreen
-import com.example.seller_app.features.home.components.OrdersContentList
+import com.example.seller_app.features.home.components.OrderCard
 import com.example.seller_app.features.home.model.HomeUiState
 
 @Composable
@@ -70,6 +77,7 @@ internal fun HomeScreen(
             onMessageShown = viewModel::messageShown,
             retry = viewModel::tryAgain
         )
+
         is HomeUiState.Success -> HomeScreenContent(
             modifier = modifier,
             message = message,
@@ -78,7 +86,7 @@ internal fun HomeScreen(
             totalDeliveredOrders = uiState.totalDeliveredOrders,
             pendingOrders = uiState.pendingOrders,
             deliveredOrders = uiState.deliveredOrders,
-            onOrderDetail = { id -> onOrderDetail(id)}
+            onOrderDetail = { id -> onOrderDetail(id) }
         )
     }
 }
@@ -86,7 +94,7 @@ internal fun HomeScreen(
 
 @Composable
 private fun HomeScreenContent(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     message: String?,
     onMessageShown: () -> Unit,
     totalPendingOrders: Int,
@@ -135,30 +143,45 @@ private fun HomeScreenContent(
         contentWindowInsets = WindowInsets.systemBars.exclude(BottomAppBarDefaults.windowInsets),
         containerColor = MaterialTheme.colorScheme.surface
     ) { paddingValues ->
-        Column(
+
+        LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
-                .fillMaxSize()
+                .fillMaxSize(),
+            contentPadding = PaddingValues(16.dp)
         ) {
-            HomeHeader(
-                totalDeliveredOrders = totalDeliveredOrders,
-                totalPendingOrders = totalPendingOrders,
-                currentTab = currentTab,
-                onSelectTab = { currentTab = it }
-            )
-            AnimatedContent(
-                targetState = currentTab,
-                modifier = Modifier.fillMaxWidth(),
-            ) { state ->
-                when (state) {
-                    OrderStatus.PENDING -> OrdersContentList(
-                        orders = pendingOrders,
-                        onDetails = { id -> onOrderDetail(id) }
-                    )
-                    OrderStatus.DELIVERED -> OrdersContentList(
-                        orders = deliveredOrders,
-                        onDetails = { id -> onOrderDetail(id) }
-                    )
+
+            item {
+                HomeHeader(
+                    totalDeliveredOrders = totalDeliveredOrders,
+                    totalPendingOrders = totalPendingOrders,
+                    currentTab = currentTab,
+                    onSelectTab = { currentTab = it }
+                )
+            }
+
+            item {
+                Spacer(Modifier.padding(vertical = 12.dp))
+            }
+
+            item {
+                AnimatedContent(
+                    targetState = currentTab,
+                    transitionSpec = {
+                        fadeIn(animationSpec = tween(300)) togetherWith fadeOut(animationSpec = tween(300))
+                    },
+                    label = "OrderTabAnimation"
+                ) { tab ->
+                    Column {
+                        val orders = if (tab == OrderStatus.PENDING) pendingOrders else deliveredOrders
+                        orders.forEach { order ->
+                            OrderCard(
+                                modifier = Modifier.padding(bottom = 18.dp),
+                                order = order,
+                                onDetails = { onOrderDetail(it) }
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -166,11 +189,39 @@ private fun HomeScreenContent(
 }
 
 
-@Preview
+@Preview(
+    name = "Phone - Medium",
+    device = "spec:width=360dp,height=720dp,dpi=320"
+)
 @Composable
 private fun Preview() {
     SellerappTheme {
-        HomeScreen(
+        val orderExample = Order(
+            id = "fdsfsdfsd",
+            customerName = "Kahio Pedro Massango",
+            date = "2025-03-01",
+            isPending = true,
+            total = 1073741834,
+            totalItems = 4
+        )
+        HomeScreenContent(
+            message = null,
+            onMessageShown = {},
+            totalPendingOrders = 0,
+            totalDeliveredOrders = 11,
+            pendingOrders = listOf(
+                orderExample,
+
+            ),
+            deliveredOrders = listOf(
+                orderExample,
+                orderExample,
+                orderExample,
+                orderExample,
+                orderExample,
+                orderExample,
+                orderExample
+            ),
             onOrderDetail = {}
         )
     }

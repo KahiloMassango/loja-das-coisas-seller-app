@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,17 +34,35 @@ internal fun AppTabRow(
     tabs: List<String>,
     onSelectTab: (String) -> Unit,
 ) {
-    Row(
+    TabRow(
         modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceEvenly
+        selectedTabIndex = tabs.indexOf(currentTab),
+        containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onSurface,
     ) {
-        tabs.forEach { tab ->
-            TabItem(
-                modifier = Modifier.weight(1f),
-                text = tab,
-                isSelected = currentTab == tab,
-                onClick = { onSelectTab(tab) }
+        tabs.forEachIndexed { index, tab ->
+            val selected = currentTab == tab
+
+            val textColor by animateColorAsState(
+                targetValue = if (selected) MaterialTheme.colorScheme.onSecondary
+                else MaterialTheme.colorScheme.onSurface,
+                label = ""
             )
+            Tab(
+                modifier = Modifier.padding(8.dp),
+                selected = selected,
+                selectedContentColor = MaterialTheme.colorScheme.secondary,
+                unselectedContentColor = Color.Companion.Transparent,
+                onClick = { onSelectTab(tab) }
+
+            ) {
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    text = tab,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = textColor
+                )
+            }
         }
     }
 }

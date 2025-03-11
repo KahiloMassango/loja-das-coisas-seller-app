@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -35,15 +36,15 @@ internal fun OrdersTab(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         OrderStatus.entries.forEach { orderStatus ->
             OrderTabItem(
+                modifier = Modifier.weight(1f),
                 text = orderStatus.description,
                 isSelected = currentTab == orderStatus,
                 onClick = { onSelectTab(orderStatus) }
             )
-            Spacer(Modifier.width(30.dp))
         }
     }
 }
@@ -72,7 +73,8 @@ private fun OrderTabItem(
         modifier = modifier
             .clip(RoundedCornerShape(50))
             .background(color = backgroundColor)
-            .clickable { onClick() }
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
     ) {
         Text(
             modifier = Modifier.padding(8.dp),

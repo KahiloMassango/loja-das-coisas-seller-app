@@ -1,6 +1,7 @@
 package com.example.seller_app.core.ui.component
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,8 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.seller_app.core.model.Gender
-import com.example.seller_app.core.model.product.Category
 
 
 @Composable
@@ -39,15 +38,15 @@ fun AppDropdownMenu(
     enabled: Boolean = true,
     onSelect: (String) -> Unit,
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Box(modifier = modifier) {
-        var expanded by remember { mutableStateOf(false) }
         Column(
-            modifier = Modifier,
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
                 text = label,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodySmall
             )
             OutlinedCard(
                 modifier = Modifier,
@@ -68,31 +67,31 @@ fun AppDropdownMenu(
                 ) {
                     Text(
                         text = selectedOption ?: placeholder,
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.bodySmall,
                         overflow = TextOverflow.Ellipsis,
                     )
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowDown,
-                        contentDescription = null
+                        contentDescription = "Abrir menu de seleção"
                     )
                 }
             }
         }
+
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             shadowElevation = 4.dp,
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
         ) {
-
             options.forEach { option ->
                 DropdownMenuItem(
                     text = { Text(option) },
                     onClick = {
+                        expanded = false // Fecha o menu antes de chamar a ação
                         if (selectedOption != option) {
                             onSelect(option)
                         }
-                        expanded = false
                     }
                 )
             }
@@ -109,7 +108,6 @@ fun AppOptionSelector(
     enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
-
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -119,9 +117,7 @@ fun AppOptionSelector(
             style = MaterialTheme.typography.bodyMedium
         )
         OutlinedCard(
-            modifier = Modifier,
-            enabled = enabled,
-            onClick = onClick,
+            modifier = Modifier.clickable(enabled = enabled, onClick = onClick),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(0.8f)),
             colors = CardDefaults.outlinedCardColors(
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -137,11 +133,11 @@ fun AppOptionSelector(
             ) {
                 Text(
                     text = selectedOption ?: placeholder,
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.bodySmall
                 )
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = null
+                    contentDescription = "Abrir opções"
                 )
             }
         }

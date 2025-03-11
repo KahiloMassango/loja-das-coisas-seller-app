@@ -25,7 +25,6 @@ fun AppCheckbox(
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Checkbox(
             checked = checked,
@@ -34,7 +33,7 @@ fun AppCheckbox(
         )
         Text(
             text = text,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.Medium
         )
     }

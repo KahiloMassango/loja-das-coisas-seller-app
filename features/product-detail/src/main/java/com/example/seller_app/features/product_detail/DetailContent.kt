@@ -34,7 +34,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import com.example.seller_app.core.model.product.Category
+import com.example.seller_app.core.ui.PhonePreviews
 import com.example.seller_app.core.ui.component.AppCheckbox
 import com.example.seller_app.core.ui.component.AppDropdownMenu
 import com.example.seller_app.core.ui.component.CenteredTopBar
@@ -42,6 +46,7 @@ import com.example.seller_app.core.ui.component.CustomButton
 import com.example.seller_app.core.ui.component.DeleteDialog
 import com.example.seller_app.core.ui.component.ImagePicker
 import com.example.seller_app.core.ui.component.StoreTextField
+import com.example.seller_app.core.ui.theme.SellerappTheme
 import com.example.seller_app.core.ui.toastMessage
 import com.example.seller_app.features.product_detail.model.ProductUiState
 
@@ -220,5 +225,38 @@ internal fun DetailContent(
                 }
             )
         }
+    }
+}
+
+//@PreviewScreenSizes
+@PhonePreviews
+@Composable
+private fun Preview() {
+    SellerappTheme {
+        DetailContent(
+            uiState = ProductUiState(
+                id = "1",
+                productName = "Tênis Esportivo",
+                description = "Tênis confortável para corrida e uso diário.",
+                image = "https://via.placeholder.com/150",
+                isAvailable = true,
+                gender = "Masculino",
+                category = Category(
+                    id = "c1", name = "Calçados",
+                    hasSizeVariation = true,
+                    hasColorVariation = true
+                )
+            ),
+            message = null,
+            messageShown = {},
+            updateImageUrl = {},
+            updateName = {},
+            onDelete = {},
+            updateDescription = {},
+            updateIsAvailable = {},
+            onVariationClick = {},
+            onSaveUpdate = {},
+            onNavigateUp = {}
+        )
     }
 }

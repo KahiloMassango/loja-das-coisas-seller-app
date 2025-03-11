@@ -54,7 +54,7 @@ fun StoreTextField(
         Text(
             modifier = Modifier.padding(bottom = 6.dp),
             text = label,
-            style = MaterialTheme.typography.labelLarge,
+            style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurface
         )
         TextField(
@@ -65,7 +65,7 @@ fun StoreTextField(
                     MaterialTheme.shapes.small
                 ),
             value = value,
-            textStyle = MaterialTheme.typography.bodyMedium,
+            textStyle = MaterialTheme.typography.bodySmall,
             isError = isError,
             leadingIcon = leadingIcon,
             singleLine = singleLine,
@@ -94,7 +94,7 @@ fun StoreTextField(
                 if (placeholder != null) {
                     Text(
                         text = placeholder,
-                        style = MaterialTheme.typography.labelLarge,
+                        style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }

@@ -15,8 +15,8 @@ class AccountRepositoryImpl(
         return jwtLocalDataSource.isLoggedIn()
     }
 
-    override suspend fun login(email: String, password: String): Result<Unit> {
-        return storeNetworkDatasource.login(email, password).mapCatching {
+    override suspend fun login(identifier: String, password: String): Result<Unit> {
+        return storeNetworkDatasource.login(identifier, password).mapCatching {
             jwtLocalDataSource.saveAccessToken(it.accessToken)
             jwtLocalDataSource.saveRefreshToken(it.refreshToken)
         }

@@ -1,21 +1,28 @@
 package com.example.seller_app.features.product_detail
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.seller_app.core.data.repositories.ProductRepository
+import com.example.seller_app.core.data.util.NetworkMonitor
 import com.example.seller_app.features.product_detail.model.DetailUiState
 import com.example.seller_app.features.product_detail.model.ProductUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 internal class ProductDetailViewModel @Inject constructor(
     private val productRepository: ProductRepository,
+    private val networkMonitor: NetworkMonitor,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -24,6 +31,13 @@ internal class ProductDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<DetailUiState>(DetailUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
+    var message: String? by mutableStateOf(null)
+        private set
+
+    var deleted by mutableStateOf(false)
+        private set
+
+
     lateinit var product: ProductUiState
 
     init {
@@ -31,6 +45,7 @@ internal class ProductDetailViewModel @Inject constructor(
     }
 
     private fun loadProduct() {
+        _uiState.value = DetailUiState.Loading
         viewModelScope.launch {
             productRepository.getProductById(productId)
                 .onSuccess { result ->
@@ -85,6 +100,10 @@ internal class ProductDetailViewModel @Inject constructor(
     }
 
     fun updatedProduct() {
+        if(!networkMonitor.hasNetworkConnection()) {
+            message = "Sem conexão com a internet"
+            return
+        }
         viewModelScope.launch {
             val state = (_uiState.value as DetailUiState.Success).product
             productRepository.updateProduct(
@@ -105,21 +124,29 @@ internal class ProductDetailViewModel @Inject constructor(
                         isAvailable = product.isAvailable
                     )
                 )
-            }.onFailure {
-                Log.d("ProductDetailViewModel", "update error: $it")
+            }.onFailure {ex ->
+                message = ex.message ?: "Algo deu errado"
             }
         }
     }
 
     fun deleteProduct() {
+        if(!networkMonitor.hasNetworkConnection()) {
+            message = "Sem conexão com a internet"
+            return
+        }
         viewModelScope.launch {
             productRepository.deleteProduct(productId)
                 .onSuccess {
-                    Log.d("ProductDetailViewModel", "delete product: success")
-                }.onFailure {
-                    Log.d("ProductDetailViewModel", "delete error: $it")
+                    deleted = true
+                }.onFailure { ex ->
+                    message = ex.message ?: "Algo deu errado"
                 }
         }
+    }
+
+    fun messageShown() {
+        message = null
     }
 
 }

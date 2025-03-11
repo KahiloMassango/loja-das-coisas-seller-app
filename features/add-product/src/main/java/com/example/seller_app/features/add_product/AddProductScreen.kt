@@ -2,6 +2,7 @@ package com.example.seller_app.features.add_product
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -22,6 +23,13 @@ internal fun AddProductScreen(
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     val colorOptions by viewModel.colors.collectAsStateWithLifecycle()
     val sizeOptions by viewModel.sizes.collectAsStateWithLifecycle()
+    val message = viewModel.message
+
+    LaunchedEffect(viewModel.productAdded) {
+        if (viewModel.productAdded) {
+            onNavigateUp()
+        }
+    }
 
     AnimatedContent(
         targetState = screen,
@@ -31,6 +39,7 @@ internal fun AddProductScreen(
             1 -> {
                 ProductDetailContent(
                     uiState = uiState,
+                    message = message,
                     genders = genders,
                     categories = categories,
                     onNavigateUp = onNavigateUp,
@@ -41,7 +50,8 @@ internal fun AddProductScreen(
                     onDescriptionChange = viewModel::updateDescription,
                     onImageChange = viewModel::updateImage,
                     updateIsAvailable = viewModel::updateIsAvailable,
-                    onSaveProduct = viewModel::saveProduct
+                    onSaveProduct = viewModel::saveProduct,
+                    messageShown = viewModel::messageShown
                 )
             }
             2 -> {

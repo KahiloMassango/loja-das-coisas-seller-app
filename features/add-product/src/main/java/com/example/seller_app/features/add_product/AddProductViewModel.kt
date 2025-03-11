@@ -1,6 +1,9 @@
 package com.example.seller_app.features.add_product
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.seller_app.core.data.repositories.CategoryRepository
@@ -8,11 +11,11 @@ import com.example.seller_app.core.data.repositories.ColorRepository
 import com.example.seller_app.core.data.repositories.GenderRepository
 import com.example.seller_app.core.data.repositories.ProductRepository
 import com.example.seller_app.core.data.repositories.SizeRepository
+import com.example.seller_app.core.data.util.NetworkMonitor
 import com.example.seller_app.core.model.Gender
 import com.example.seller_app.core.model.product.Category
 import com.example.seller_app.core.model.product.ProductItemRequest
 import com.example.seller_app.core.model.product.ProductRequest
-import com.example.seller_app.core.model.product.ProductWithVariation
 import com.example.seller_app.features.add_product.model.ProductUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,11 +35,18 @@ internal class AddProductViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository,
     private val colorRepository: ColorRepository,
     private val sizeRepository: SizeRepository,
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
+    private val networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProductUiState())
     val uiState: StateFlow<ProductUiState> = _uiState.asStateFlow()
+
+    var message: String? by mutableStateOf(null)
+        private set
+
+    var productAdded: Boolean by mutableStateOf(false)
+        private set
 
     val colors = colorRepository.getAllColors()
         .stateIn(
@@ -116,6 +126,10 @@ internal class AddProductViewModel @Inject constructor(
     }
 
     fun saveProduct() {
+        if (!networkMonitor.hasNetworkConnection()) {
+            message = "Sem conexão com a internet"
+            return
+        }
         viewModelScope.launch {
             productRepository.addProduct(
                 ProductRequest(
@@ -128,15 +142,15 @@ internal class AddProductViewModel @Inject constructor(
                     productItems = _uiState.value.productItems
                 )
             ).onSuccess {
-
-                Log.d("AddProductViewModel", "add product: success")
+                productAdded = true
+            }.onFailure { error ->
+                message = error.message ?: "Algo deu errado!"
             }
-                .onFailure {
-                    Log.d("AddProductViewModel", "add product error: ${it.message}")
-                }
         }
     }
 
-
+    fun messageShown() {
+        message = null
+    }
 }
 

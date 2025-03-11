@@ -18,7 +18,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -45,14 +49,17 @@ internal fun FinancesScreen(
     viewModel: FinanceViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val message = viewModel.message
 
     when (uiState) {
         is FinanceUiState.Loading -> LoadingScreen()
         is FinanceUiState.Error -> ErrorScreen(uiState.message, retry = viewModel::loadStatus)
         is FinanceUiState.Success -> FinancesContent(
             modifier = modifier,
+            message = message,
             financeStatus = uiState.financeStatus,
-            onWithdraw =  viewModel::requestWithdraw
+            onWithdraw =  viewModel::requestWithdraw,
+            messageShown = viewModel::messageShown
         )
     }
 
@@ -61,12 +68,32 @@ internal fun FinancesScreen(
 @Composable
 internal fun FinancesContent(
     modifier: Modifier = Modifier,
+    message: String?,
     financeStatus: FinanceStatus,
+    messageShown: () -> Unit,
     onWithdraw: () -> Unit
 ) {
     var currentTab by rememberSaveable { mutableStateOf(WithdrawStatus.PENDING.description) }
+    val snackbarHostState = SnackbarHostState()
+
+    message?.let { msg ->
+        LaunchedEffect(msg) {
+            snackbarHostState.showSnackbar(msg)
+            messageShown()
+        }
+    }
+
     Scaffold(
         modifier = modifier,
+        snackbarHost = {
+            SnackbarHost(snackbarHostState){
+                Snackbar(
+                    snackbarData = it,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+        },
         topBar = {
             CenteredTopBar(
                 title = "Finanças",

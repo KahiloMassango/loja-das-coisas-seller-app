@@ -16,7 +16,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +50,8 @@ import com.example.seller_app.features.product_detail.model.ProductUiState
 internal fun DetailContent(
     modifier: Modifier = Modifier,
     uiState: ProductUiState,
+    message: String?,
+    messageShown: () -> Unit,
     updateImageUrl: (String) -> Unit,
     updateName: (String) -> Unit,
     onDelete: () -> Unit,
@@ -60,10 +66,26 @@ internal fun DetailContent(
     var isEditing by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
+    val snackbarHostState = SnackbarHostState()
 
+    message?.let { msg ->
+        LaunchedEffect(msg) {
+            snackbarHostState.showSnackbar(msg)
+            messageShown()
+        }
+    }
 
     Scaffold(
         modifier = modifier,
+        snackbarHost = {
+            SnackbarHost(snackbarHostState){
+                Snackbar(
+                    snackbarData = it,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+        },
         topBar = {
             CenteredTopBar(
                 title = "Produtos",

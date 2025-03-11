@@ -2,6 +2,8 @@ package com.example.seller_app.core.data.di
 
 import android.content.Context
 import androidx.work.WorkManager
+import com.example.seller_app.core.data.util.NetworkConnectivityMonitor
+import com.example.seller_app.core.data.util.NetworkMonitor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,4 +23,10 @@ object ComponentModule {
         context: Context
     ): WorkManager = WorkManager.getInstance(context)
 
+    @Provides
+    @Singleton
+    fun providesNetworkMonitor(
+        @ApplicationContext
+        context: Context
+    ): NetworkMonitor = NetworkConnectivityMonitor(context)
 }

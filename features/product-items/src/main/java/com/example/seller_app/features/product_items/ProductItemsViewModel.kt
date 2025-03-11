@@ -1,12 +1,15 @@
 package com.example.seller_app.features.product_items
 
-import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.seller_app.core.data.repositories.ColorRepository
 import com.example.seller_app.core.data.repositories.ProductRepository
 import com.example.seller_app.core.data.repositories.SizeRepository
+import com.example.seller_app.core.data.util.NetworkMonitor
 import com.example.seller_app.core.model.product.ProductItemRequest
 import com.example.seller_app.core.model.product.Size
 import com.example.seller_app.features.product_items.model.ProductItemUpdate
@@ -24,10 +27,14 @@ internal class ProductItemsViewModel @Inject constructor(
     private val colorRepository: ColorRepository,
     private val sizeRepository: SizeRepository,
     private val productRepository: ProductRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
     val productId = savedStateHandle.get<String>("productId")!!
+
+    var message: String? by mutableStateOf(null)
+        private set
 
     private val _uiState = MutableStateFlow<ProductItemsUiState>(ProductItemsUiState.Loading)
     val uiState = _uiState.asStateFlow()
@@ -44,7 +51,7 @@ internal class ProductItemsViewModel @Inject constructor(
         loadProduct()
     }
 
-    fun loadProduct() {
+    private fun loadProduct() {
         viewModelScope.launch {
             productRepository.getProductById(productId)
                 .onSuccess { product ->
@@ -57,26 +64,59 @@ internal class ProductItemsViewModel @Inject constructor(
                 }
                 .onFailure {
                     _uiState.value = ProductItemsUiState.Error(it.message ?: "Unknown error")
-                    Log.d("ProductDetailViewModel", "${it.message} - $productId")
                 }
         }
     }
 
+    fun tryAgain() {
+        if(!networkMonitor.hasNetworkConnection()) {
+            message = "Sem conexão com a internet"
+            return
+        }
+        viewModelScope.launch {
+            _uiState.value = ProductItemsUiState.Loading
+            productRepository.getProductById(productId)
+                .onSuccess { product ->
+                    _uiState.value = ProductItemsUiState.Success(
+                        productName = product.name,
+                        category = product.category,
+                        productItems = product.productItems
+                    )
+                    _sizes.value = sizeRepository.getSizesByCategory(product.category.id)
+                }
+                .onFailure {
+                    message
+                    _uiState.value = ProductItemsUiState.Error(it.message ?: "Unknown error")
+                }
+        }
+    }
+
+    fun messageShown() {
+        message = null
+    }
+
     fun addProductItem(productItem: ProductItemRequest) {
+        if(!networkMonitor.hasNetworkConnection()) {
+            message = "Sem conexão com a internet"
+            return
+        }
         viewModelScope.launch {
             productRepository.addProductItem(productId, productItem)
                 .onSuccess {
-                    Log.d("VariationsViewModel", "add variation: success")
                     loadProduct()
                 }
-                .onFailure {
-                    Log.d("VariationsViewModel", "add variation: $it")
+                .onFailure { error ->
+                    message = error.message
                 }
 
         }
     }
 
     fun updateProductItem(update: ProductItemUpdate) {
+        if(!networkMonitor.hasNetworkConnection()) {
+            message = "Sem conexão com a internet"
+            return
+        }
         viewModelScope.launch {
             productRepository.updateProductItem(
                 productId = productId,
@@ -86,25 +126,26 @@ internal class ProductItemsViewModel @Inject constructor(
                 image = update.image
             )
                 .onSuccess {
-                    Log.d("VariationsViewModel", "update variation: success")
                     loadProduct()
                 }
-                .onFailure {
-                    Log.d("VariationsViewModel", "update variation: $it")
+                .onFailure { error ->
+                    message = error.message
                 }
         }
     }
 
     fun deleteVariation(productItemId: String) {
+        if(!networkMonitor.hasNetworkConnection()) {
+            message = "Sem conexão com a internet"
+            return
+        }
         viewModelScope.launch {
-            Log.d("VariationsViewModel", "delete variation: $productItemId - $productId")
             productRepository.deleteProductItem(productId, productItemId)
                 .onSuccess {
-                    Log.d("VariationsViewModel", "delete variation: success")
                     loadProduct()
                 }
-                .onFailure {
-                    Log.d("VariationsViewModel", "delete error variation: $it")
+                .onFailure { error ->
+                    message = error.message
                 }
         }
     }

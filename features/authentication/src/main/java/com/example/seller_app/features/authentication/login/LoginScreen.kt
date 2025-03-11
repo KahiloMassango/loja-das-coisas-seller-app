@@ -15,6 +15,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,19 +52,36 @@ internal fun LoginScreen(
     onForgotPassword: () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
-
     var identifier by remember { mutableStateOf("store@example.com") }
     var password by remember { mutableStateOf("store@example.com") }
 
+    val snackbarHostState = SnackbarHostState()
+
     LaunchedEffect(viewModel.isLoggedIn) {
         if (viewModel.isLoggedIn) {
-            onLogin()
+         //   onLogin()
+        }
+    }
+
+    viewModel.message?.let { msg ->
+        LaunchedEffect(msg) {
+            snackbarHostState.showSnackbar(msg)
+            viewModel.messageShown()
         }
     }
 
 
     Scaffold(
         modifier = modifier,
+        snackbarHost = {
+            SnackbarHost(snackbarHostState){
+                Snackbar(
+                    snackbarData = it,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+        },
         containerColor = MaterialTheme.colorScheme.surface,
     ) { paddingValues ->
         Surface(

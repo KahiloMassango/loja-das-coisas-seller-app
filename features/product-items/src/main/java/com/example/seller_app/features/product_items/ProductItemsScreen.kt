@@ -22,10 +22,12 @@ internal fun ProductItemsScreen(
     val uiState = viewmodel.uiState.collectAsStateWithLifecycle().value
     val colors by viewmodel.colors.collectAsStateWithLifecycle()
     val sizes by viewmodel.sizes.collectAsStateWithLifecycle()
+    val message = viewmodel.message
 
     when(uiState) {
         is ProductItemsUiState.Loading -> LoadingScreen()
         is ProductItemsUiState.Success -> ProductItemsContent(
+            message = message,
             colorOptions = colors,
             sizeOptions = sizes,
             onNavigateUp = onNavigateUp,
@@ -34,7 +36,8 @@ internal fun ProductItemsScreen(
             productItems = uiState.productItems,
             addVariation = viewmodel::addProductItem,
             updateVariation = viewmodel::updateProductItem,
-            deleteVariation = viewmodel::deleteVariation
+            deleteVariation = viewmodel::deleteVariation,
+            messageShown = viewmodel::messageShown
         )
         is ProductItemsUiState.Error -> ErrorContent(uiState.message)
     }

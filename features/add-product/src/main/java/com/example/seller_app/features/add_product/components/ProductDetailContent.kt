@@ -15,7 +15,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -38,6 +42,7 @@ import com.example.seller_app.features.add_product.model.ProductUiState
 @Composable
 internal fun ProductDetailContent(
     modifier: Modifier = Modifier,
+    message: String?,
     uiState: ProductUiState,
     onProductNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
@@ -49,13 +54,32 @@ internal fun ProductDetailContent(
     updateIsAvailable: (Boolean) -> Unit,
     onVariationsClick: () -> Unit,
     onSaveProduct: () -> Unit,
+    messageShown: () -> Unit,
     onNavigateUp: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
 
+    val snackbarHostState = SnackbarHostState()
+
+    message?.let { msg ->
+        LaunchedEffect(msg) {
+            snackbarHostState.showSnackbar(msg)
+            messageShown()
+        }
+    }
+
     Scaffold(
         modifier = modifier,
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) {
+                Snackbar(
+                    snackbarData = it,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+        },
         topBar = {
             CenteredTopBar(
                 title = "Produto",

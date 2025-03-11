@@ -3,7 +3,11 @@ package com.example.seller_app.features.product_items.components
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +28,7 @@ import com.example.seller_app.features.product_items.model.ProductItemUpdate
 @Composable
 internal fun ProductItemsContent(
     modifier: Modifier = Modifier,
+    message: String?,
     productName: String,
     category: Category,
     productItems: List<ProductItem>,
@@ -32,15 +37,33 @@ internal fun ProductItemsContent(
     addVariation: (ProductItemRequest) -> Unit,
     updateVariation: (ProductItemUpdate) -> Unit,
     deleteVariation: (String) -> Unit,
+    messageShown: () -> Unit,
     onNavigateUp: () -> Unit,
 ) {
 
     var showAddVariationModal by remember { mutableStateOf(false) }
     var variationId: String? by remember { mutableStateOf(null) }
     var selectedProductItem: ProductItem? by remember { mutableStateOf(null) }
+    val snackbarHostState = SnackbarHostState()
+
+    message?.let { msg ->
+        LaunchedEffect(msg) {
+            snackbarHostState.showSnackbar(msg)
+            messageShown()
+        }
+    }
 
     Scaffold(
         modifier = modifier,
+        snackbarHost = {
+            SnackbarHost(snackbarHostState){
+                Snackbar(
+                    snackbarData = it,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+        },
         topBar = {
             CenteredTopBar(
                 title = "Variações",

@@ -119,7 +119,9 @@ fun AppOptionSelector(
             style = MaterialTheme.typography.bodyMedium
         )
         OutlinedCard(
-            modifier = Modifier.clickable(enabled = enabled, onClick = onClick),
+            modifier = Modifier,
+            onClick = onClick,
+            enabled = enabled,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(0.8f)),
             colors = CardDefaults.outlinedCardColors(
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,

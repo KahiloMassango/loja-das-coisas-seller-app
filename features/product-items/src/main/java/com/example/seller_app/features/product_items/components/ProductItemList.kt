@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.example.seller_app.core.model.product.ProductItem
 
 @Composable
-internal fun ProductItemList(
+internal fun  ProductItemList(
     modifier: Modifier = Modifier,
     productItems: List<ProductItem>,
     productName: String,
@@ -31,7 +31,7 @@ internal fun ProductItemList(
                     productName = productName,
                     productItem = productItem,
                     onClick = { onProductItemClick(productItem) },
-                    onRemove = { onDelete(productItem.id) }
+                    onDelete = { onDelete(productItem.id) }
                 )
             }
         }

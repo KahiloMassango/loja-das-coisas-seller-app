@@ -22,7 +22,7 @@ fun ProductVariationSelector(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(14.dp),
+        horizontalArrangement = Arrangement.spacedBy(18.dp),
     ) {
         when {
             category.hasSizeVariation && category.hasColorVariation -> {
@@ -48,7 +48,7 @@ fun ProductVariationSelector(
             category.hasColorVariation -> {
                 // Show only Color dropdown
                 AppOptionSelector(
-                    modifier = Modifier.fillMaxWidth(0.5f),
+                    modifier = Modifier.fillMaxWidth(1f),
                     label = "Cor",
                     placeholder = "Selecione uma opção",
                     enabled = enabled,

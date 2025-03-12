@@ -54,7 +54,7 @@ fun ProductCard(
                 modifier = Modifier,
                 text = product.name,
                 color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.titleSmall,
+                style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.Normal
             )
             Text(

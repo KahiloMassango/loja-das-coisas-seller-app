@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,11 +25,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.seller_app.core.model.product.Category
 import com.example.seller_app.core.model.product.Color
 import com.example.seller_app.core.model.product.ProductItemRequest
 import com.example.seller_app.core.model.product.Size
+import com.example.seller_app.core.ui.theme.SellerappTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,9 +67,8 @@ fun AddVariationModal(
         val focusManager = LocalFocusManager.current
         Column(
             modifier = Modifier
-                .systemBarsPadding()
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -83,6 +86,7 @@ fun AddVariationModal(
             )
 
             PriceAndQuantityContainer(
+                modifier = Modifier.fillMaxWidth(),
                 price = price,
                 stockQuantity = stockQuantity,
                 onPriceChange = { price = it },
@@ -147,9 +151,5 @@ private fun isValidProductItem(
                 && (price.toDoubleOrNull() ?: 0.0) > 0.1)
     }
 }
-
-
-
-
 
 

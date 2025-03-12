@@ -3,10 +3,14 @@ package com.example.seller_app.features.product_items.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
@@ -29,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.seller_app.core.model.product.ProductItem
 import com.example.seller_app.core.ui.R
-import com.example.seller_app.core.ui.util.formatCurrency
 import com.example.seller_app.core.ui.util.toCurrency
 
 @Composable
@@ -38,10 +41,11 @@ internal fun ProductItemCard(
     productName: String,
     productItem: ProductItem,
     onClick: (String) -> Unit,
-    onRemove: (String) -> Unit,
+    onDelete: (String) -> Unit,
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier
+            .heightIn(min = 114.dp, max = 120.dp),
         elevation = CardDefaults.elevatedCardElevation(5.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background,
@@ -50,14 +54,16 @@ internal fun ProductItemCard(
         onClick = { onClick(productItem.id) }
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
         ) {
             AsyncImage(
                 model = productItem.imageUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(108.dp)
+                    .width(114.dp)
                     .fillMaxHeight(),
                 error = painterResource(R.drawable.ic_launcher_background)
             )
@@ -69,7 +75,7 @@ internal fun ProductItemCard(
                     modifier = Modifier
                         .padding(10.dp)
                         .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(0.dp)
+                    verticalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Text(
                         text = productName,
@@ -111,7 +117,7 @@ internal fun ProductItemCard(
                     }
                 }
                 IconButton(
-                    onClick = { onRemove(productItem.id) },
+                    onClick = { onDelete(productItem.id) },
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,

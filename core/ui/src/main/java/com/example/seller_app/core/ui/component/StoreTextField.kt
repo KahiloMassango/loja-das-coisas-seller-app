@@ -122,7 +122,7 @@ fun LabeledTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
     Column(
-        modifier = Modifier,
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Text(
@@ -132,19 +132,18 @@ fun LabeledTextField(
         )
 
         TextField(
-            modifier = modifier
+            modifier = Modifier
                 .clip(MaterialTheme.shapes.small)
                 .border(
                     1.dp,
                     MaterialTheme.colorScheme.outlineVariant.copy(0.8f),
                     MaterialTheme.shapes.small
-                )
-                ,//.width(100.dp),
+                ),
             value = value,
             singleLine = singleLine,
             maxLines = maxLines,
             onValueChange = onValueChange,
-            textStyle = MaterialTheme.typography.titleMedium,
+            textStyle = MaterialTheme.typography.bodySmall,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             visualTransformation = visualTransformation,
@@ -160,7 +159,7 @@ fun LabeledTextField(
                 if (placeholder != null) {
                     Text(
                         text = placeholder,
-                        style = MaterialTheme.typography.labelLarge,
+                        style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -168,7 +167,7 @@ fun LabeledTextField(
             suffix = {
                 Text(
                     text = suffix,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.outlineVariant
                 )
             }

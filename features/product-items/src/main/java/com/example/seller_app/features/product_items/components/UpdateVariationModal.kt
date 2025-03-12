@@ -87,6 +87,7 @@ internal fun UpdateVariationModal(
                 onChangeSize = {}
             )
             PriceAndQuantityContainer(
+                modifier = Modifier.fillMaxWidth(),
                 price = price,
                 stockQuantity = stockQuantity,
                 onPriceChange = { price = it },

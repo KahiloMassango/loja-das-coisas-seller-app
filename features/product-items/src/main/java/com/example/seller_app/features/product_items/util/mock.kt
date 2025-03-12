@@ -18,6 +18,14 @@ val mockProductItems = listOf(
         color = Color(name = "Vermelho", id = ""),
         imageUrl = "https://via.placeholder.com/150",
         price = 6000,
+        size = null,
+        stockQuantity = 5
+    ),
+    ProductItem(
+        id = "3",
+        color = Color(name = "Vermelho", id = ""),
+        imageUrl = "https://via.placeholder.com/150",
+        price = 6000,
         size = Size("", value = "M", categoryId = ""),
         stockQuantity = 5
     )

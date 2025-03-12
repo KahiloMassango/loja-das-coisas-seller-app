@@ -26,11 +26,11 @@ fun PriceAndQuantityContainer(
 ) {
     val focusManager = LocalFocusManager.current
     Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(40.dp)
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         LabeledTextField(
-            modifier = Modifier.width(126.dp),
+            modifier = Modifier.fillMaxWidth(0.4f),
             label = "Preço",
             suffix = "Kz",
             value = price,
@@ -51,7 +51,7 @@ fun PriceAndQuantityContainer(
 
         )
         LabeledTextField(
-            modifier = Modifier.width(110.dp),
+            modifier = Modifier.fillMaxWidth(0.6f),
             label = "Quantidade",
             suffix = "unid.",
             value = stockQuantity,

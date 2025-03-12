@@ -21,7 +21,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,8 +33,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import com.example.seller_app.core.model.product.Category
 import com.example.seller_app.core.ui.PhonePreviews
@@ -43,7 +42,7 @@ import com.example.seller_app.core.ui.component.AppCheckbox
 import com.example.seller_app.core.ui.component.AppDropdownMenu
 import com.example.seller_app.core.ui.component.CenteredTopBar
 import com.example.seller_app.core.ui.component.CustomButton
-import com.example.seller_app.core.ui.component.DeleteDialog
+import com.example.seller_app.core.ui.component.DeleteConfirmationDialog
 import com.example.seller_app.core.ui.component.ImagePicker
 import com.example.seller_app.core.ui.component.StoreTextField
 import com.example.seller_app.core.ui.theme.SellerappTheme
@@ -144,6 +143,7 @@ internal fun DetailContent(
                 onValueChange = { updateDescription(it) },
                 enabled = isEditing,
                 label = "Descrição",
+                maxLines = 6,
                 singleLine = false,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Ascii,
@@ -183,7 +183,6 @@ internal fun DetailContent(
             Spacer(Modifier.height(20.dp))
             Row(
                 horizontalArrangement = Arrangement.spacedBy(30.dp),
-
                 ) {
                 if (!isEditing) {
                     CustomButton(
@@ -214,13 +213,12 @@ internal fun DetailContent(
             }
         }
         if (showDeleteDialog) {
-            DeleteDialog(
+            DeleteConfirmationDialog (
                 text = "Tem certeza que deseja excluir este producto?",
                 onConfirm = {
                     onDelete()
-                    showDeleteDialog = false
                 },
-                onDismissRequest = {
+                onDismiss = {
                     showDeleteDialog = false
                 }
             )
@@ -231,13 +229,16 @@ internal fun DetailContent(
 //@PreviewScreenSizes
 @PhonePreviews
 @Composable
-private fun Preview() {
+private fun Preview(
+    @PreviewParameter(LoremIpsum::class)
+    description: String,
+) {
     SellerappTheme {
         DetailContent(
             uiState = ProductUiState(
                 id = "1",
                 productName = "Tênis Esportivo",
-                description = "Tênis confortável para corrida e uso diário.",
+                description = description,
                 image = "https://via.placeholder.com/150",
                 isAvailable = true,
                 gender = "Masculino",

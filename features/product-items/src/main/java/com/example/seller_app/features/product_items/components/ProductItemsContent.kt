@@ -19,11 +19,16 @@ import com.example.seller_app.core.model.product.Color
 import com.example.seller_app.core.model.product.ProductItem
 import com.example.seller_app.core.model.product.ProductItemRequest
 import com.example.seller_app.core.model.product.Size
+import com.example.seller_app.core.ui.PhonePreviews
 import com.example.seller_app.core.ui.component.AddVariationFAB
 import com.example.seller_app.core.ui.component.AddVariationModal
 import com.example.seller_app.core.ui.component.CenteredTopBar
-import com.example.seller_app.core.ui.component.DeleteDialog
+import com.example.seller_app.core.ui.component.DeleteConfirmationDialog
+import com.example.seller_app.core.ui.theme.SellerappTheme
 import com.example.seller_app.features.product_items.model.ProductItemUpdate
+import com.example.seller_app.features.product_items.util.mockColors
+import com.example.seller_app.features.product_items.util.mockProductItems
+import com.example.seller_app.features.product_items.util.mockSizes
 
 @Composable
 internal fun ProductItemsContent(
@@ -113,17 +118,37 @@ internal fun ProductItemsContent(
             )
         }
         if (variationId != null) {
-            DeleteDialog(
+            DeleteConfirmationDialog(
                 text = "Você tem certeza que deseja excluir esta variação?",
                 onConfirm = {
                     deleteVariation(variationId!!)
                     variationId = null
                 },
-                onDismissRequest = {
+                onDismiss = {
                     variationId = null
                 }
             )
         }
 
+    }
+}
+
+@PhonePreviews
+@Composable
+private fun Private() {
+    SellerappTheme {
+        ProductItemsContent(
+            message = null,
+            productName = "Camiseta Básica",
+            category = Category(id = "1", name = "Roupas", hasSizeVariation = true, hasColorVariation = true),
+            productItems = mockProductItems,
+            colorOptions = mockColors,
+            sizeOptions = mockSizes,
+            addVariation = {},
+            updateVariation = {},
+            deleteVariation = {},
+            messageShown = {},
+            onNavigateUp = {}
+        )
     }
 }

@@ -3,8 +3,8 @@ package com.example.seller_app.features.product_items.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -23,12 +23,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.seller_app.core.model.product.ProductItem
 import com.example.seller_app.core.ui.R
 import com.example.seller_app.core.ui.util.formatCurrency
+import com.example.seller_app.core.ui.util.toCurrency
 
 @Composable
 internal fun ProductItemCard(
@@ -39,7 +41,7 @@ internal fun ProductItemCard(
     onRemove: (String) -> Unit,
 ) {
     Card(
-        modifier = modifier.height(104.dp),
+        modifier = modifier,
         elevation = CardDefaults.elevatedCardElevation(5.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background,
@@ -55,51 +57,56 @@ internal fun ProductItemCard(
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(104.dp),
+                    .size(108.dp)
+                    .fillMaxHeight(),
                 error = painterResource(R.drawable.ic_launcher_background)
             )
             Row(
                 modifier = Modifier
                     .weight(1f),
-            ){
+            ) {
                 Column(
                     modifier = Modifier
                         .padding(10.dp)
                         .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
                     Text(
                         text = productName,
                         color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.SemiBold
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
 
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (productItem.color != null) {
-                            AttributeDescription(attribute = "Cor", value = productItem.color?.name ?: "Color")
-                        }
-                        if (productItem.size != null) {
-                            AttributeDescription(attribute = "Tamanho", value = productItem.size?.value ?: "SIze")
-                        }
+                    productItem.color?.let {
+                        AttributeDescription(
+                            attribute = "Cor",
+                            value = productItem.color?.name ?: "Color"
+                        )
+                    }
+
+                    productItem.size?.let {
+                        AttributeDescription(
+                            attribute = "Tamanho",
+                            value = productItem.size?.value ?: "SIze"
+                        )
                     }
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(14.dp),
                         verticalAlignment = Alignment.CenterVertically
-                    ){
+                    ) {
                         Text(
-                            text = formatCurrency(productItem.price),
+                            text = productItem.price.toCurrency(),
                             color = MaterialTheme.colorScheme.onSurface,
-                            style = MaterialTheme.typography.labelLarge,
+                            style = MaterialTheme.typography.bodySmall,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
                             text = "Qtd: ${productItem.stockQuantity}",
                             color = MaterialTheme.colorScheme.onSurface,
-                            style = MaterialTheme.typography.labelLarge,
+                            style = MaterialTheme.typography.bodySmall,
                         )
                     }
                 }
@@ -126,8 +133,7 @@ private fun AttributeDescription(
         withStyle(
             style = SpanStyle(
                 color = MaterialTheme.colorScheme.inverseOnSurface,
-                fontWeight = FontWeight.Light,
-                fontSize = MaterialTheme.typography.labelLarge.fontSize
+                fontSize = MaterialTheme.typography.bodySmall.fontSize
             )
         ) {
             append("$attribute: ")
@@ -135,8 +141,7 @@ private fun AttributeDescription(
         withStyle(
             style = SpanStyle(
                 color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Light,
-                fontSize = MaterialTheme.typography.labelLarge.fontSize
+                fontSize = MaterialTheme.typography.bodySmall.fontSize
             )
         ) {
             append(value)

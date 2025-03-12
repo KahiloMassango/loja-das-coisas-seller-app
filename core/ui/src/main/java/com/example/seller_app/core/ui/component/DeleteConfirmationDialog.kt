@@ -21,14 +21,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
 @Composable
-fun DeleteDialog(
+fun DeleteConfirmationDialog(
     modifier: Modifier = Modifier,
     text: String,
     onConfirm: () -> Unit,
-    onDismissRequest: () -> Unit,
+    onDismiss: () -> Unit,
 ) {
     Dialog(
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = onDismiss,
     ) {
         Box(
             modifier = Modifier
@@ -58,12 +58,15 @@ fun DeleteDialog(
                 ) {
                     CustomOutlinedButton(
                         text = "Cancelar",
-                        onClick = onDismissRequest
+                        onClick = onDismiss
                     )
                     Spacer(Modifier.width(14.dp))
                     CustomButton(
                         text = "Excluir",
-                        onClick = onConfirm
+                        onClick = {
+                            onConfirm()
+                            onDismiss()
+                        }
                     )
                 }
             }

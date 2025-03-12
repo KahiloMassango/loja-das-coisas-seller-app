@@ -43,7 +43,7 @@ fun GenderDropdownMenu(
         ) {
             Text(
                 text = "Gênero",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodySmall
             )
             OutlinedCard(
                 modifier = Modifier,
@@ -63,9 +63,11 @@ fun GenderDropdownMenu(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
+                        modifier = Modifier.weight(1f),
                         text = selected?.name ?: "Selecione uma opção",
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.bodySmall,
                         overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
                     )
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowDown,
@@ -83,7 +85,12 @@ fun GenderDropdownMenu(
 
             genders.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option.name) },
+                    text = {
+                        Text(
+                            text = option.name,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    },
                     onClick = {
                         if (selected != option) {
                             onSelect(option)

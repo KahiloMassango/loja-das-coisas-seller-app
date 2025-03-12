@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import com.example.seller_app.core.model.product.Category
 
 @Composable
@@ -43,7 +44,7 @@ fun CategoryDropdownMenu(
         ) {
             Text(
                 text = "Categoria",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodySmall
             )
             OutlinedCard(
                 modifier = Modifier,
@@ -63,9 +64,11 @@ fun CategoryDropdownMenu(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
+                        modifier = Modifier.weight(1f),
                         text = selected?.name ?: "Selecione uma opção",
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.bodySmall,
                         overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
                     )
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowDown,
@@ -83,7 +86,12 @@ fun CategoryDropdownMenu(
 
             categories.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option.name) },
+                    text = {
+                        Text(
+                            text = option.name,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    },
                     onClick = {
                         if (selected != option) {
                             onSelect(option)

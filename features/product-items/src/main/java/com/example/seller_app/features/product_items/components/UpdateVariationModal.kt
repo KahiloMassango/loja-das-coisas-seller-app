@@ -67,9 +67,8 @@ internal fun UpdateVariationModal(
     ) {
         Column(
             modifier = Modifier
-                .systemBarsPadding()
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {

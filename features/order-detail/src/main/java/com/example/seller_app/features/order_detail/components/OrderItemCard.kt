@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,7 +31,8 @@ internal fun OrderItemCard(
     orderItem: OrderItem
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier
+            .heightIn(min = 114.dp, max = 120.dp),
         elevation = CardDefaults.elevatedCardElevation(3.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background,
@@ -47,17 +49,17 @@ internal fun OrderItemCard(
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(108.dp)
+                    .width(114.dp)
                     .fillMaxHeight()
             )
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(3.dp)
+                verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
-                    text = orderItem.productName,
+                    text = orderItem.productName.replaceFirstChar { it.uppercase() },
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Medium,

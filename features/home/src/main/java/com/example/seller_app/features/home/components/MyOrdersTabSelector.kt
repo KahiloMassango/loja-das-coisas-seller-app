@@ -6,9 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,14 +23,13 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.seller_app.core.model.OrderStatus
 import com.example.seller_app.core.ui.theme.SellerappTheme
-import kotlin.collections.forEach
 
 
 @Composable
 internal fun OrdersTab(
     modifier: Modifier = Modifier,
-    currentTab: OrderStatus,
-    onSelectTab: (OrderStatus) -> Unit,
+    currentTab: String,
+    onSelectTab: (String) -> Unit,
 ) {
     Row(
         modifier = modifier,
@@ -42,8 +39,8 @@ internal fun OrdersTab(
             OrderTabItem(
                 modifier = Modifier.weight(1f),
                 text = orderStatus.description,
-                isSelected = currentTab == orderStatus,
-                onClick = { onSelectTab(orderStatus) }
+                isSelected = currentTab == orderStatus.description,
+                onClick = { onSelectTab(orderStatus.description) }
             )
         }
     }
@@ -89,11 +86,11 @@ private fun OrderTabItem(
 @PreviewLightDark
 @Composable
 private fun Preview() {
-    var currentTab by remember { mutableStateOf(OrderStatus.PENDING) }
+    var currentTab by remember { mutableStateOf(OrderStatus.PENDING.description) }
 
     SellerappTheme() {
         OrdersTab(
-            currentTab = currentTab,
+            currentTab = "currentTab",
             onSelectTab = { currentTab = it },
         )
     }

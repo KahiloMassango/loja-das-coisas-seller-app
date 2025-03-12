@@ -19,8 +19,8 @@ internal fun HomeHeader(
     modifier: Modifier = Modifier,
     totalDeliveredOrders: Int,
     totalPendingOrders: Int,
-    currentTab: OrderStatus,
-    onSelectTab: (OrderStatus) -> Unit,
+    currentTab: String,
+    onSelectTab: (String) -> Unit,
 ) {
     Column(modifier = modifier
     ) {

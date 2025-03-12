@@ -29,7 +29,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -103,7 +103,7 @@ private fun HomeScreenContent(
     deliveredOrders: List<Order>,
     onOrderDetail: (String) -> Unit
 ) {
-    var currentTab by remember { mutableStateOf(OrderStatus.PENDING) }
+    var currentTab by rememberSaveable { mutableStateOf(OrderStatus.PENDING.description) }
     val snackbarHostState = SnackbarHostState()
 
     message?.let {
@@ -168,12 +168,17 @@ private fun HomeScreenContent(
                 AnimatedContent(
                     targetState = currentTab,
                     transitionSpec = {
-                        fadeIn(animationSpec = tween(300)) togetherWith fadeOut(animationSpec = tween(300))
+                        fadeIn(animationSpec = tween(300)) togetherWith fadeOut(
+                            animationSpec = tween(
+                                300
+                            )
+                        )
                     },
                     label = "OrderTabAnimation"
                 ) { tab ->
                     Column {
-                        val orders = if (tab == OrderStatus.PENDING) pendingOrders else deliveredOrders
+                        val orders =
+                            if (tab == OrderStatus.PENDING.description) pendingOrders else deliveredOrders
                         orders.forEach { order ->
                             OrderCard(
                                 modifier = Modifier.padding(bottom = 18.dp),
@@ -212,7 +217,7 @@ private fun Preview() {
             pendingOrders = listOf(
                 orderExample,
 
-            ),
+                ),
             deliveredOrders = listOf(
                 orderExample,
                 orderExample,

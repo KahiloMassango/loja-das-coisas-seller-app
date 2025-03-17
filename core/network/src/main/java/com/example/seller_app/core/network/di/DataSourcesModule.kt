@@ -1,25 +1,19 @@
 package com.example.seller_app.core.network.di
 
-import com.example.seller_app.core.network.CategoryNetworkDataSource
-import com.example.seller_app.core.network.ColorNetworkDataSource
 import com.example.seller_app.core.network.FinanceDataSourceImpl
-import com.example.seller_app.core.network.GenderNetworkDataSource
 import com.example.seller_app.core.network.JwtNetworkDataSourceImpl
 import com.example.seller_app.core.network.OrderNetworkDataSourceImp
-import com.example.seller_app.core.network.datasources.ProductRemoteDataSource
 import com.example.seller_app.core.network.ProductNetworkDataSource
-import com.example.seller_app.core.network.SizeNetworkDataSource
 import com.example.seller_app.core.network.StoreNetworkDataSourceImpl
-import com.example.seller_app.core.network.datasources.CategoryRemoteDataSource
-import com.example.seller_app.core.network.datasources.ColorRemoteDataSource
+import com.example.seller_app.core.network.SyncNetworkDatasourceImpl
 import com.example.seller_app.core.network.datasources.FinanceDataSource
-import com.example.seller_app.core.network.datasources.GenderRemoteDataSource
 import com.example.seller_app.core.network.datasources.JwtNetworkDatasource
 import com.example.seller_app.core.network.datasources.OrderNetworkDataSource
-import com.example.seller_app.core.network.datasources.SizeRemoteDataSource
+import com.example.seller_app.core.network.datasources.ProductRemoteDataSource
 import com.example.seller_app.core.network.datasources.StoreNetworkDatasource
+import com.example.seller_app.core.network.datasources.SyncNetworkDatasource
 import com.example.seller_app.core.network.retrofit.AppApiService
-import com.example.seller_app.core.network.retrofit.AuthApiService
+import com.example.seller_app.core.network.retrofit.PublicApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,18 +36,18 @@ object DataSourcesModule {
 
     @Provides
     fun providesJwtNetworkDataSource(
-        authApiService: AuthApiService
+        publicApiService: PublicApiService
     ): JwtNetworkDatasource {
-        return JwtNetworkDataSourceImpl(authApiService)
+        return JwtNetworkDataSourceImpl(publicApiService)
 
     }
 
     @Provides
     fun providesStoreNetworkDataSource(
-        authApiService: AuthApiService,
+        publicApiService: PublicApiService,
         appApiService: AppApiService
     ): StoreNetworkDatasource {
-        return StoreNetworkDataSourceImpl(authApiService, appApiService)
+        return StoreNetworkDataSourceImpl(publicApiService, appApiService)
 
     }
 
@@ -66,22 +60,7 @@ object DataSourcesModule {
     }
 
     @Provides
-    fun providesCategoryRemoteDataSource(
-        networkApi: AppApiService
-    ): CategoryRemoteDataSource = CategoryNetworkDataSource(networkApi)
-
-    @Provides
-    fun providesColorRemoteDataSource(
-        networkApi: AppApiService
-    ): ColorRemoteDataSource = ColorNetworkDataSource(networkApi)
-
-    @Provides
-    fun providesSizeRemoteDataSource(
-        networkApi: AppApiService
-    ): SizeRemoteDataSource = SizeNetworkDataSource(networkApi)
-
-    @Provides
-    fun providesGenderRemoteDataSource(
-        networkApi: AppApiService
-    ): GenderRemoteDataSource = GenderNetworkDataSource(networkApi)
+    fun providesSyncNetworkDatasource(
+        apiService: PublicApiService
+    ): SyncNetworkDatasource = SyncNetworkDatasourceImpl(apiService)
 }

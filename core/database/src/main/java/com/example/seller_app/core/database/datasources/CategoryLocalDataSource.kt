@@ -7,8 +7,10 @@ interface CategoryLocalDataSource {
 
     suspend fun upsertCategories(categories: List<CategoryEntity>)
 
-    suspend fun deleteCategoriesNotIn(categories: List<String>)
-
     fun getCategoryFlow(): Flow<List<CategoryEntity>>
+
+    fun getCategoriesByGenderFlow(genderId: String): Flow<List<CategoryEntity>>
+
+    fun getCategoriesByGenderName(name: String): Flow<List<CategoryEntity>>
 
 }

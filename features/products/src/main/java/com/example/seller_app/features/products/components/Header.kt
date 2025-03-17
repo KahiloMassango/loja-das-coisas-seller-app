@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
+import com.example.seller_app.core.model.Gender
 import com.example.seller_app.core.ui.component.AppDropdownMenu
+import com.example.seller_app.core.ui.component.GenderDropdownMenu
 import com.example.seller_app.core.ui.component.StoreSearchTextField
 
 @Composable
@@ -39,6 +41,8 @@ internal fun Header(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+
+
 
                 AppDropdownMenu(
                     modifier = Modifier.weight(0.5f),

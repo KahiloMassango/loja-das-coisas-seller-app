@@ -44,7 +44,7 @@ internal object OkhttpModule {
         //val loggingInterceptor = HttpLoggingInterceptor()
         //loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
-           // .addInterceptor(loggingInterceptor)
+          //  .addInterceptor(loggingInterceptor)
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.SECONDS)

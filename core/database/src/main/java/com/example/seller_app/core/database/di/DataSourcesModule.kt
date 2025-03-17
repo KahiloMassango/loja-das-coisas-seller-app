@@ -6,6 +6,7 @@ import com.example.seller_app.core.database.GenderLocalDataSourceImpl
 import com.example.seller_app.core.database.SizeLocalDataSourceImpl
 import com.example.seller_app.core.database.dao.CategoryDao
 import com.example.seller_app.core.database.dao.ColorDao
+import com.example.seller_app.core.database.dao.GenderCategoryDao
 import com.example.seller_app.core.database.dao.GenderDao
 import com.example.seller_app.core.database.dao.SizeDao
 import com.example.seller_app.core.database.datasources.CategoryLocalDataSource
@@ -23,8 +24,9 @@ object DataSourcesModule {
 
     @Provides
     fun providesCategoryLocalDataSource(
-        categoryDao: CategoryDao
-    ): CategoryLocalDataSource = CategoryLocalDataSourceImp(categoryDao)
+        categoryDao: CategoryDao,
+        genderCategoryDao: GenderCategoryDao
+    ): CategoryLocalDataSource = CategoryLocalDataSourceImp(categoryDao, genderCategoryDao)
 
     @Provides
     fun providesColorLocalDataSource(
@@ -38,8 +40,9 @@ object DataSourcesModule {
 
     @Provides
     fun provideGenderLocalDataSource(
-        genderDao: GenderDao
-    ): GenderLocalDataSource = GenderLocalDataSourceImpl(genderDao)
+        genderDao: GenderDao,
+        genderCategoryDao: GenderCategoryDao
+    ): GenderLocalDataSource = GenderLocalDataSourceImpl(genderDao, genderCategoryDao)
 
 
 }

@@ -2,6 +2,7 @@ package com.example.seller_app.core.data.model
 
 import com.example.seller_app.core.database.model.CategoryEntity
 import com.example.seller_app.core.database.model.ColorEntity
+import com.example.seller_app.core.database.model.GenderCategory
 import com.example.seller_app.core.database.model.GenderEntity
 import com.example.seller_app.core.database.model.SizeEntity
 import com.example.seller_app.core.model.product.Product
@@ -11,11 +12,11 @@ import com.example.seller_app.core.network.model.request.ProductDtoReq
 import com.example.seller_app.core.network.model.request.ProductItemDtoReq
 import com.example.seller_app.core.network.model.request.ProductItemUpdateDtoReq
 import com.example.seller_app.core.network.model.request.ProductUpdateDtoReq
+import com.example.seller_app.core.network.model.response.GenderCategoryDtoRes
 import com.example.seller_app.core.network.model.response.GenderDtoRes
 import com.example.seller_app.core.network.model.response.product.CategoryDtoRes
 import com.example.seller_app.core.network.model.response.product.ColorDtoRes
 import com.example.seller_app.core.network.model.response.product.SizeDtoRes
-
 
 
 fun ColorDtoRes.asEntity() = ColorEntity(
@@ -28,6 +29,8 @@ fun SizeDtoRes.asEntity() = SizeEntity(
     value = value,
     categoryId = categoryId
 )
+
+fun GenderCategoryDtoRes.asEntity() = GenderCategory(genderId, categoryId)
 
 fun GenderDtoRes.asEntity() = GenderEntity(
     id = id,

@@ -11,9 +11,11 @@ import com.example.seller_app.core.data.repositories.ProductRepository
 import com.example.seller_app.core.data.util.NetworkMonitor
 import com.example.seller_app.core.model.product.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -49,9 +51,17 @@ internal class ProductsViewModel @Inject constructor(
             emptyList()
         )
 
-    val categories = categoryRepository.getCategories()
-        .map { it.map { category -> category.name } }
-        .stateIn(
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val categories = currentGender
+        .flatMapLatest { name ->
+            if (name == null) {
+                categoryRepository.getCategories()
+                    .map { it.map { category -> category.name } }
+            } else {
+                categoryRepository.getCategoriesByGenderName(name)
+                    .map { it.map { category -> category.name } }
+            }
+        }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000L),
             emptyList()

@@ -50,11 +50,11 @@ internal fun BalanceCard(
             ) {
                 Text(
                     text = "Balanço",
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
                     text = balance.toCurrency(),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -76,7 +76,7 @@ internal fun BalanceCard(
                     )
                     Text(
                         text = "Retirar",
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
             }

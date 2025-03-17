@@ -85,7 +85,7 @@ internal fun ProductItemRequestCard(
                     Text(
                         text = formatCurrency(productItemRequest.price),
                         color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.labelLarge,
+                        style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.SemiBold
                     )
                 }
@@ -113,7 +113,7 @@ private fun AttributeDescription(
             style = SpanStyle(
                 color = MaterialTheme.colorScheme.inverseOnSurface,
                 fontWeight = FontWeight.Light,
-                fontSize = MaterialTheme.typography.labelLarge.fontSize
+                fontSize = MaterialTheme.typography.bodySmall.fontSize
             )
         ) {
             append("$attribute: ")
@@ -122,7 +122,7 @@ private fun AttributeDescription(
             style = SpanStyle(
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Light,
-                fontSize = MaterialTheme.typography.labelLarge.fontSize
+                fontSize = MaterialTheme.typography.bodySmall.fontSize
             )
         ) {
             append(value)

@@ -1,68 +1,20 @@
 package com.example.seller_app.core.data
 
-import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import com.example.seller_app.core.data.workmanager.CategorySyncWorker
-import com.example.seller_app.core.data.workmanager.ColorSyncWorker
-import com.example.seller_app.core.data.workmanager.GenderSyncWorker
-import com.example.seller_app.core.data.workmanager.SizeSyncWorker
+import com.example.seller_app.core.data.workmanager.SyncWorker
+import com.example.seller_app.core.network.datasources.SyncNetworkDatasource
 
 class SyncManager(
     private val workManager: WorkManager,
+    private val syncNetworkDatasource: SyncNetworkDatasource,
 ) {
 
     fun sync() {
-        workManager.beginUniqueWork(
-            "sync",
-            ExistingWorkPolicy.REPLACE,
-            listOf(
-                OneTimeWorkRequest.from(CategorySyncWorker::class.java),
-                OneTimeWorkRequest.from(SizeSyncWorker::class.java),
-                OneTimeWorkRequest.from(ColorSyncWorker::class.java),
-                OneTimeWorkRequest.from(GenderSyncWorker::class.java)
-            )
-        ).enqueue()
-    }
+        val workRequest = OneTimeWorkRequest.Builder(SyncWorker::class.java)
+            .build()
 
-    fun syncCategories() {
-        val workRequest = OneTimeWorkRequest.from(CategorySyncWorker::class.java)
-
-        workManager.enqueueUniqueWork(
-            "syncCategories",
-            ExistingWorkPolicy.REPLACE,
-            workRequest
-        )
-    }
-
-    fun syncSizes() {
-        val workRequest = OneTimeWorkRequest.from(SizeSyncWorker::class.java)
-
-        workManager.enqueueUniqueWork(
-            "syncSizes",
-            ExistingWorkPolicy.REPLACE,
-            workRequest
-        )
-    }
-
-    fun syncColors() {
-        val workRequest = OneTimeWorkRequest.from(ColorSyncWorker::class.java)
-
-        workManager.enqueueUniqueWork(
-            "syncColors",
-            ExistingWorkPolicy.REPLACE,
-            workRequest
-        )
-    }
-
-    fun syncGenders() {
-        val workRequest = OneTimeWorkRequest.from(GenderSyncWorker::class.java)
-
-        workManager.enqueueUniqueWork(
-            "syncGenders",
-            ExistingWorkPolicy.REPLACE,
-            workRequest
-        )
+        workManager.enqueue(workRequest)
     }
 
 }

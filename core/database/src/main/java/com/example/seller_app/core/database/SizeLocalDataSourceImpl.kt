@@ -12,7 +12,9 @@ class SizeLocalDataSourceImpl(
 
     override suspend fun upsertSizes(sizes: List<SizeEntity>) {
         withContext(Dispatchers.IO) {
+            val newSizeIds = sizes.map { it.id }
             sizeDao.insertSizes(sizes)
+            sizeDao.deleteSizesNotIn(newSizeIds)
         }
     }
 

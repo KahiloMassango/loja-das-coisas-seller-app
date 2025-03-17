@@ -28,19 +28,19 @@ fun ProductVariationSelector(
             category.hasSizeVariation && category.hasColorVariation -> {
                 // Show both Color and Size dropdowns
                 AppOptionSelector(
-                    modifier = Modifier.fillMaxWidth(0.5f),
+                    modifier = Modifier.weight(1f),
                     label = "Cor",
                     placeholder = "Selecione uma opção",
                     enabled = enabled,
-                    selectedOption = selectedColor?.name ?: "",
+                    selectedOption = selectedColor?.name,
                     onClick = onChangeColor,
                 )
                 AppOptionSelector(
-                    modifier = Modifier.fillMaxWidth(0.5f),
+                    modifier = Modifier.weight(1f),
                     label = "Tamanho",
                     placeholder = "Selecione uma opção",
                     enabled = enabled,
-                    selectedOption = selectedSize?.value ?: "",
+                    selectedOption = selectedSize?.value,
                     onClick = onChangeSize,
                 )
             }

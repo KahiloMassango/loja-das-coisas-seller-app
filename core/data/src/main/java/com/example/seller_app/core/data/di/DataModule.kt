@@ -14,6 +14,7 @@ import com.example.seller_app.core.data.PreferenceRepositoryImpl
 import com.example.seller_app.core.data.ProductRepositoryImpl
 import com.example.seller_app.core.data.SizeRepositoryImpl
 import com.example.seller_app.core.data.SyncManager
+import com.example.seller_app.core.data.SyncRepositoryImpl
 import com.example.seller_app.core.data.repositories.AccountRepository
 import com.example.seller_app.core.data.repositories.CategoryRepository
 import com.example.seller_app.core.data.repositories.ColorRepository
@@ -23,18 +24,16 @@ import com.example.seller_app.core.data.repositories.OrderRepository
 import com.example.seller_app.core.data.repositories.PreferenceRepository
 import com.example.seller_app.core.data.repositories.ProductRepository
 import com.example.seller_app.core.data.repositories.SizeRepository
+import com.example.seller_app.core.data.repositories.SyncRepository
 import com.example.seller_app.core.database.datasources.CategoryLocalDataSource
 import com.example.seller_app.core.database.datasources.ColorLocalDataSource
 import com.example.seller_app.core.database.datasources.GenderLocalDataSource
 import com.example.seller_app.core.database.datasources.SizeLocalDataSource
-import com.example.seller_app.core.network.datasources.CategoryRemoteDataSource
-import com.example.seller_app.core.network.datasources.ColorRemoteDataSource
 import com.example.seller_app.core.network.datasources.FinanceDataSource
-import com.example.seller_app.core.network.datasources.GenderRemoteDataSource
 import com.example.seller_app.core.network.datasources.OrderNetworkDataSource
 import com.example.seller_app.core.network.datasources.ProductRemoteDataSource
-import com.example.seller_app.core.network.datasources.SizeRemoteDataSource
 import com.example.seller_app.core.network.datasources.StoreNetworkDatasource
+import com.example.seller_app.core.network.datasources.SyncNetworkDatasource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -47,6 +46,11 @@ import dagger.hilt.components.SingletonComponent
 object DataModule {
 
     @Provides
+    fun providesSyncRepository(
+        syncNetworkDatasource: SyncNetworkDatasource
+    ): SyncRepository = SyncRepositoryImpl(syncNetworkDatasource)
+
+    @Provides
     fun providesFinanceRepository(
         financeDataSource: FinanceDataSource
     ): FinanceRepository = FinanceRepositoryImpl(financeDataSource)
@@ -54,7 +58,8 @@ object DataModule {
     @Provides
     fun providesSyncManager(
         workManager: WorkManager,
-    ): SyncManager = SyncManager(workManager)
+        syncNetworkDatasource: SyncNetworkDatasource
+    ): SyncManager = SyncManager(workManager, syncNetworkDatasource)
 
     @Provides
     fun providesOrderRepository(
@@ -75,26 +80,22 @@ object DataModule {
     @Provides
     fun provideGenderRepository(
         localDataSource: GenderLocalDataSource,
-        remoteDataSource: GenderRemoteDataSource
-    ): GenderRepository = GenderRepositoryImpl(localDataSource, remoteDataSource)
+    ): GenderRepository = GenderRepositoryImpl(localDataSource)
 
     @Provides
     fun provideCategoryRepository(
         localDataSource: CategoryLocalDataSource,
-        remoteDataSource: CategoryRemoteDataSource
-    ): CategoryRepository = CategoryRepositoryImpl(localDataSource, remoteDataSource)
+    ): CategoryRepository = CategoryRepositoryImpl(localDataSource)
 
     @Provides
     fun provideColorRepository(
         localDataSource: ColorLocalDataSource,
-        remoteDataSource: ColorRemoteDataSource
-    ): ColorRepository = ColorRepositoryImpl(localDataSource, remoteDataSource)
+    ): ColorRepository = ColorRepositoryImpl(localDataSource)
 
     @Provides
     fun provideSizeRepository(
         localDataSource: SizeLocalDataSource,
-        remoteDataSource: SizeRemoteDataSource
-    ): SizeRepository = SizeRepositoryImpl(localDataSource, remoteDataSource)
+    ): SizeRepository = SizeRepositoryImpl(localDataSource)
 
     @Provides
     fun provideProductRepository(

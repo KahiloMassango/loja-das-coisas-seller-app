@@ -20,31 +20,24 @@ class AppViewModel @Inject constructor(
     private val syncManager: SyncManager
 ) : ViewModel() {
 
-    // Controls splash screen visibility
     var showSplashScreen by mutableStateOf(true)
         private set
 
-    // Expose a Boolean flow that indicates if the user is logged in.
-    // Defaulting to false means the UI initially considers the user unauthenticated.
+
     val isLoggedInFlow = accountRepository.isUserLoggedIn()
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
             false
-        )
+        ).also {
+            viewModelScope.launch { delay(2000)
+                showSplashScreen = false
+            }
+        }
+
 
     init {
-        // Trigger any necessary sync operations at startup.
-        syncManager.syncCategories()
-        syncManager.syncSizes()
-        syncManager.syncColors()
-        syncManager.syncGenders()
-
-        // Use a delay to keep the splash screen visible until work is done.
-        viewModelScope.launch {
-            delay(1700)
-            showSplashScreen = false
-        }
+        syncManager.sync()
     }
 
 }

@@ -1,6 +1,5 @@
 package com.example.seller_app.features.products
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,9 +36,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -89,7 +85,7 @@ internal fun ProductsScreen(
         isRefreshing = isRefreshing,
         products = products,
         genders = genders,
-        categories = categories,
+        categories =    categories,
         message = message,
         onMessageShown = viewModel::messageShown,
         onRefresh = viewModel::refresh,

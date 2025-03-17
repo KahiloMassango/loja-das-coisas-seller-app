@@ -1,16 +1,11 @@
 package com.example.seller_app.core.network.retrofit
 
-import com.example.seller_app.core.network.model.response.GenderDtoRes
 import com.example.seller_app.core.network.model.Response
 import com.example.seller_app.core.network.model.response.FinanceStatusDtoRes
 import com.example.seller_app.core.network.model.response.order.OrderDetailDtoRes
 import com.example.seller_app.core.network.model.response.order.OrdersDtoRes
-import com.example.seller_app.core.network.model.response.product.CategoryDtoRes
-import com.example.seller_app.core.network.model.response.product.ColorDtoRes
 import com.example.seller_app.core.network.model.response.product.ProductDtoRes
-import com.example.seller_app.core.network.model.response.product.ProductItemDtoRes
 import com.example.seller_app.core.network.model.response.product.ProductWithVariationRes
-import com.example.seller_app.core.network.model.response.product.SizeDtoRes
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.DELETE
@@ -24,18 +19,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface AppApiService {
-
-    @GET("categories")
-    suspend fun getCategories(): Response<List<CategoryDtoRes>>
-
-    @GET("colors")
-    suspend fun getColors(): Response<List<ColorDtoRes>>
-
-    @GET("genders")
-    suspend fun getGenders(): Response<List<GenderDtoRes>>
-
-    @GET("sizes")
-    suspend fun getSizes(): Response<List<SizeDtoRes>>
 
     @GET("auth/logout")
     suspend fun logout()

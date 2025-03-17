@@ -7,7 +7,5 @@ interface ColorLocalDataSource {
 
     suspend fun upsertColors(colors: List<ColorEntity>)
 
-    suspend fun deleteColorsNotIn(colors: List<String>)
-
     fun getColorsFlow(): Flow<List<ColorEntity>>
 }

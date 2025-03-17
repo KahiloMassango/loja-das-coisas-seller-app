@@ -1,6 +1,5 @@
 package com.example.seller_app.core.network
 
-import com.example.seller_app.core.model.FinanceStatus
 import com.example.seller_app.core.network.common.extractErrorMessage
 import com.example.seller_app.core.network.datasources.FinanceDataSource
 import com.example.seller_app.core.network.model.response.FinanceStatusDtoRes

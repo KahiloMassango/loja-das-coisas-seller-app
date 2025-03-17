@@ -34,8 +34,8 @@ fun WithdrawRecordCard(
         )
     ){
         Column(
-            modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            modifier = Modifier.padding(10.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -44,7 +44,7 @@ fun WithdrawRecordCard(
             ) {
                 Text(
                     text = "Montante: ${record.amount.toCurrency()}",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodySmall
                 )
                 Text(
                     text = record.requestDate,
@@ -57,14 +57,14 @@ fun WithdrawRecordCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Taxa: ${record.feeAmount.toCurrency()} (${record.fee})",
-                    style = MaterialTheme.typography.bodyMedium
+                    text = "Taxa: ${record.feeAmount.toCurrency()} (${record.fee}%)",
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "Total retirado: ${record.total.toCurrency()}",
-                style = MaterialTheme.typography.bodyMedium,
+                text = "Total: ${record.total.toCurrency()}",
+                style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.SemiBold
             )
         }

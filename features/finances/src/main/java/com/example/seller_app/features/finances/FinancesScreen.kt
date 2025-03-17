@@ -1,5 +1,6 @@
 package com.example.seller_app.features.finances
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -58,7 +59,7 @@ internal fun FinancesScreen(
             modifier = modifier,
             message = message,
             financeStatus = uiState.financeStatus,
-            onWithdraw =  viewModel::requestWithdraw,
+            onWithdraw = viewModel::requestWithdraw,
             messageShown = viewModel::messageShown
         )
     }
@@ -86,7 +87,7 @@ internal fun FinancesContent(
     Scaffold(
         modifier = modifier,
         snackbarHost = {
-            SnackbarHost(snackbarHostState){
+            SnackbarHost(snackbarHostState) {
                 Snackbar(
                     snackbarData = it,
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -113,20 +114,41 @@ internal fun FinancesContent(
         containerColor = MaterialTheme.colorScheme.surface,
         contentWindowInsets = WindowInsets.systemBars.exclude(BottomAppBarDefaults.windowInsets)
     ) { paddingValues ->
-        Column(
+
+        LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            FinancesContentHeader(
-                balance = financeStatus.balance,
-                currentTab = currentTab,
-                onTabChange = { currentTab = it },
-                onWithdraw = onWithdraw
-            )
-            when (currentTab) {
-                WithdrawStatus.PENDING.description -> WithdrawRecordsList(records = financeStatus.pending)
-                WithdrawStatus.COMPLETED.description -> WithdrawRecordsList(records = financeStatus.completed)
+            item {
+                FinancesContentHeader(
+                    balance = financeStatus.balance,
+                    currentTab = currentTab,
+                    onTabChange = { currentTab = it },
+                    onWithdraw = onWithdraw
+                )
+            }
+
+            item {
+                AnimatedContent(
+                    targetState = currentTab,
+                    label = "Withdraw Tab Animation"
+                ) { tab ->
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        val records =
+                            if (tab == WithdrawStatus.PENDING.description) financeStatus.pending
+                            else financeStatus.completed
+
+                        records.forEach { record ->
+                            WithdrawRecordCard(
+                                record = record
+                            )
+                        }
+                    }
+                }
             }
         }
     }

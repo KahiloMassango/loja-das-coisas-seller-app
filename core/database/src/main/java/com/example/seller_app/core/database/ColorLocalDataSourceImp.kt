@@ -18,14 +18,12 @@ class ColorLocalDataSourceImp(
 
     override suspend fun upsertColors(colors: List<ColorEntity>) {
         withContext(Dispatchers.IO) {
+            val newColorsIds = colors.map { it.id }
             colorDao.insertColors(colors)
+            colorDao.deleteColorsNotIn(newColorsIds)
+
         }
     }
 
-    override suspend fun deleteColorsNotIn(colors: List<String>) {
-        withContext(Dispatchers.IO) {
-            colorDao.deleteColorsNotIn(colors)
-        }
-    }
 
 }

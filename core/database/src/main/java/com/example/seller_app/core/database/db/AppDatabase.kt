@@ -4,24 +4,27 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.seller_app.core.database.dao.GenderDao
-import com.example.seller_app.core.database.dao.ColorDao
-import com.example.seller_app.core.database.dao.SizeDao
 import com.example.seller_app.core.database.dao.CategoryDao
-import com.example.seller_app.core.database.model.GenderEntity
-import com.example.seller_app.core.database.model.ColorEntity
-import com.example.seller_app.core.database.model.SizeEntity
+import com.example.seller_app.core.database.dao.ColorDao
+import com.example.seller_app.core.database.dao.GenderCategoryDao
+import com.example.seller_app.core.database.dao.GenderDao
+import com.example.seller_app.core.database.dao.SizeDao
 import com.example.seller_app.core.database.model.CategoryEntity
+import com.example.seller_app.core.database.model.ColorEntity
+import com.example.seller_app.core.database.model.GenderCategory
+import com.example.seller_app.core.database.model.GenderEntity
+import com.example.seller_app.core.database.model.SizeEntity
 
 
 @Database(
     [
+        GenderCategory::class,
         GenderEntity::class,
         CategoryEntity::class,
         ColorEntity::class,
         SizeEntity::class,
     ],
-    version = 1,
+    version = 4,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -29,6 +32,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun colorDao(): ColorDao
     abstract fun sizeDao(): SizeDao
+    abstract fun genderCategoryDao(): GenderCategoryDao
+
 
     companion object {
 

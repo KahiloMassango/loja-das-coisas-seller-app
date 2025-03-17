@@ -34,7 +34,6 @@ import com.example.seller_app.features.product_items.util.mockSizes
 internal fun ProductItemsContent(
     modifier: Modifier = Modifier,
     message: String?,
-    productName: String,
     category: Category,
     productItems: List<ProductItem>,
     colorOptions: List<Color>,
@@ -88,7 +87,6 @@ internal fun ProductItemsContent(
         ProductItemList(
             modifier = Modifier.padding(paddingValues),
             productItems = productItems,
-            productName = productName,
             onProductItemClick = { selectedProductItem = it },
             onDelete = {
                 variationId = it
@@ -139,7 +137,6 @@ private fun Private() {
     SellerappTheme {
         ProductItemsContent(
             message = null,
-            productName = "Camiseta Básica",
             category = Category(id = "1", name = "Roupas", hasSizeVariation = true, hasColorVariation = true),
             productItems = mockProductItems,
             colorOptions = mockColors,

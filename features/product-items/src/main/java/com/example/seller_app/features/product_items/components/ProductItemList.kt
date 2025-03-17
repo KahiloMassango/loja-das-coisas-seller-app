@@ -14,7 +14,6 @@ import com.example.seller_app.core.model.product.ProductItem
 internal fun  ProductItemList(
     modifier: Modifier = Modifier,
     productItems: List<ProductItem>,
-    productName: String,
     onProductItemClick: (ProductItem) -> Unit,
     onDelete: (String) -> Unit
 ) {
@@ -28,7 +27,6 @@ internal fun  ProductItemList(
         ) {
             items(productItems, { it.id }) { productItem ->
                 ProductItemCard(
-                    productName = productName,
                     productItem = productItem,
                     onClick = { onProductItemClick(productItem) },
                     onDelete = { onDelete(productItem.id) }

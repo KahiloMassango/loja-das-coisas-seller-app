@@ -31,7 +31,6 @@ internal fun ProductItemsScreen(
             colorOptions = colors,
             sizeOptions = sizes,
             onNavigateUp = onNavigateUp,
-            productName = uiState.productName,
             category = uiState.category,
             productItems = uiState.productItems,
             addVariation = viewmodel::addProductItem,

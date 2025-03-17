@@ -38,7 +38,6 @@ import com.example.seller_app.core.ui.util.toCurrency
 @Composable
 internal fun ProductItemCard(
     modifier: Modifier = Modifier,
-    productName: String,
     productItem: ProductItem,
     onClick: (String) -> Unit,
     onDelete: (String) -> Unit,
@@ -77,15 +76,6 @@ internal fun ProductItemCard(
                         .weight(1f),
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Text(
-                        text = productName,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodySmall,
-                        fontWeight = FontWeight.SemiBold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
                     productItem.color?.let {
                         AttributeDescription(
                             attribute = "Cor",

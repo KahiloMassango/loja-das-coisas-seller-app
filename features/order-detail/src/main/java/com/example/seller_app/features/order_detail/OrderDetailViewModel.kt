@@ -27,7 +27,7 @@ internal class OrderDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val orderId = savedStateHandle.get<String>("orderId") ?: ""
+    private val orderId = savedStateHandle.get<String>("id") ?: ""
 
     var message: String? by mutableStateOf(null)
         private set
@@ -56,25 +56,6 @@ internal class OrderDetailViewModel @Inject constructor(
                 }
                 .onFailure { ex ->
                     _uiState.value = OrderDetailUiState.Error(ex.message ?: "Sem conexão com a internet")
-                }
-        }
-    }
-
-    fun confirmDelivery() {
-        if(!networkMonitor.hasNetworkConnection()) {
-            message = "Sem conexão com a internet"
-            return
-        }
-        viewModelScope.launch {
-            val currentOrderState = (_uiState.value as OrderDetailUiState.Success).order
-            orderRepository.confirmDeliveredOrder(orderId)
-                .onSuccess {
-                    _uiState.value =
-                        OrderDetailUiState.Success(currentOrderState.copy(delivered = true))
-                }
-                .onFailure { ex ->
-                    message = ex.message
-                    Log.d("OrderDetailViewModel", "confirmDeliveredOrder error: $ex")
                 }
         }
     }

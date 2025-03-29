@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class OrderDetailRoute(val orderId: String)
+data class OrderDetailRoute(val id: String)
 
 fun NavController.navigateToOrderDetail(orderId: String) = navigate(OrderDetailRoute(orderId))
 

@@ -47,7 +47,6 @@ internal val mockOrderDetail = OrderDetail(
     total = 17000,
     deliveryAddressName = "Rua 12, Bairro Tal, Luanda",
     paymentType = "Cartão de Crédito",
-    deliveryMethod = "Entrega ao Domicílio",
     delivered = false,
     orderItems = orderItems
 )

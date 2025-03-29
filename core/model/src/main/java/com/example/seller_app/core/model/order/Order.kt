@@ -27,7 +27,6 @@ data class OrderDetail(
     val total: Int,
     val deliveryAddressName: String,
     val paymentType: String,
-    val deliveryMethod: String,
     val delivered: Boolean,
     val orderItems: List<OrderItem>
 )

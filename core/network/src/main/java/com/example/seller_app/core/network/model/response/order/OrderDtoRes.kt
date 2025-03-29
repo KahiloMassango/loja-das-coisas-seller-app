@@ -46,7 +46,6 @@ data class OrderDetailDtoRes(
     val total: Int,
     val deliveryAddressName: String,
     val paymentType: String,
-    val deliveryMethod: String,
     val delivered: Boolean,
     val orderItems: List<OrderItemDtoRes>
 )
@@ -61,7 +60,6 @@ fun OrderDetailDtoRes.asExternalModel() = OrderDetail(
     total = total,
     deliveryAddressName = deliveryAddressName,
     paymentType = paymentType,
-    deliveryMethod = deliveryMethod,
     delivered = delivered,
     orderItems = orderItems.map(OrderItemDtoRes::asExternalModel)
 )

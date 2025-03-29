@@ -11,20 +11,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.seller_app.core.model.order.OrderDetail
-import com.example.seller_app.core.model.order.OrderItem
 import com.example.seller_app.core.ui.PhonePreviews
 import com.example.seller_app.core.ui.component.CenteredTopBar
-import com.example.seller_app.core.ui.component.CustomButton
 import com.example.seller_app.core.ui.theme.SellerappTheme
 import com.example.seller_app.core.ui.util.toCurrency
 import com.example.seller_app.features.order_detail.components.ErrorScreen
@@ -57,7 +53,6 @@ internal fun OrderDetailScreen(
                 modifier = modifier,
                 message = message,
                 orderDetail = uiState.order,
-                onConfirmDelivery = viewModel::confirmDelivery,
                 messageShown = viewModel::messageShown,
                 onNavigateUp = onNavigateUp
             )
@@ -72,7 +67,6 @@ internal fun OrderDetailContent(
     modifier: Modifier = Modifier,
     message: String?,
     orderDetail: OrderDetail,
-    onConfirmDelivery: () -> Unit,
     messageShown: () -> Unit,
     onNavigateUp: () -> Unit,
 ) {
@@ -135,20 +129,10 @@ internal fun OrderDetailContent(
                     modifier = Modifier.padding(top = 8.dp),
                     deliveryAddress = orderDetail.deliveryAddressName,
                     paymentType = orderDetail.paymentType,
-                    deliveryMethod = orderDetail.deliveryMethod,
                     total = orderDetail.total.toCurrency(),
                 )
             }
 
-            if (!orderDetail.delivered) {
-                item {
-                    CustomButton(
-                        modifier = Modifier.padding(top = 14.dp),
-                        onClick = onConfirmDelivery,
-                        text = "Confirmar entrega",
-                    )
-                }
-            }
         }
     }
 }
@@ -162,7 +146,6 @@ private fun Preview() {
         OrderDetailContent(
             message = null,
             orderDetail = mockOrderDetail,
-            onConfirmDelivery = {},
             messageShown = {},
             onNavigateUp = {},
         )
